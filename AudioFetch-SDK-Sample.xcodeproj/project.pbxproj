@@ -17,7 +17,6 @@
 		2738E4CB1D0F76D300B684B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2738E4CA1D0F76D300B684B4 /* Constants.swift */; };
 		2738E50C1D0F906000B684B4 /* libAudioFetchSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2738E50B1D0F906000B684B4 /* libAudioFetchSDK.a */; };
 		275432541D21C7BD00728081 /* AppBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275432531D21C7BD00728081 /* AppBase.swift */; };
-		275432571D21C8FD00728081 /* AudioFetchApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 275432561D21C8FD00728081 /* AudioFetchApplication.m */; };
 		275432591D21C92400728081 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275432581D21C92400728081 /* main.swift */; };
 		27DBB9BE1D21E4BC0038CA4A /* EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBB9BD1D21E4BC0038CA4A /* EXT.swift */; };
 		27FA630E1D107FFE00AA2180 /* ChannelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA630D1D107FFE00AA2180 /* ChannelCollectionViewCell.swift */; };
@@ -42,8 +41,6 @@
 		2738E50A1D0F906000B684B4 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
 		2738E50B1D0F906000B684B4 /* libAudioFetchSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAudioFetchSDK.a; sourceTree = "<group>"; };
 		275432531D21C7BD00728081 /* AppBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppBase.swift; sourceTree = "<group>"; };
-		275432551D21C8FD00728081 /* AudioFetchApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFetchApplication.h; sourceTree = "<group>"; };
-		275432561D21C8FD00728081 /* AudioFetchApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioFetchApplication.m; sourceTree = "<group>"; };
 		275432581D21C92400728081 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		27DBB9BD1D21E4BC0038CA4A /* EXT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EXT.swift; sourceTree = "<group>"; };
 		27FA630D1D107FFE00AA2180 /* ChannelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -159,8 +156,6 @@
 				2738E42D1D0F678100B684B4 /* AppDelegate.swift */,
 				275432581D21C92400728081 /* main.swift */,
 				275432531D21C7BD00728081 /* AppBase.swift */,
-				275432551D21C8FD00728081 /* AudioFetchApplication.h */,
-				275432561D21C8FD00728081 /* AudioFetchApplication.m */,
 				27DBB9BD1D21E4BC0038CA4A /* EXT.swift */,
 				2738E4CA1D0F76D300B684B4 /* Constants.swift */,
 			);
@@ -204,6 +199,7 @@
 				28300E96AD9B54184CECD66B /* [CP] Check Pods Manifest.lock */,
 				2738E4261D0F678100B684B4 /* Sources */,
 				2738E4271D0F678100B684B4 /* Frameworks */,
+				311C082A1D67CC03001C84A0 /* ShellScript */,
 				2738E4281D0F678100B684B4 /* Resources */,
 				A92B535EB9CF6036C634C9A1 /* [CP] Embed Pods Frameworks */,
 				0BB4342B8DDF0974CE90EA40 /* [CP] Copy Pods Resources */,
@@ -229,6 +225,7 @@
 				TargetAttributes = {
 					2738E4291D0F678100B684B4 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = T2JV8CBKG9;
 					};
 				};
 			};
@@ -294,6 +291,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		311C082A1D67CC03001C84A0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\n# Auto Increment Version Script\nbuildPlist=$INFOPLIST_FILE\necho $buildPlist\nCFSVString=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$buildPlist\")\nCFBundleVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$buildPlist\")\nBUILD_NR=${CFBundleVersion##*.}\n    BUILD_NR=$(($BUILD_NR + 1))\n    #echo $BUILD_NR\n    CFBundleVersion=$CFSVString\".\"$BUILD_NR\n    #echo $CFBundleVersion\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $CFBundleVersion\" \"$buildPlist\"";
+		};
 		A92B535EB9CF6036C634C9A1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,7 +328,6 @@
 			files = (
 				2738E4301D0F678100B684B4 /* ViewController.swift in Sources */,
 				275432591D21C92400728081 /* main.swift in Sources */,
-				275432571D21C8FD00728081 /* AudioFetchApplication.m in Sources */,
 				275432541D21C7BD00728081 /* AppBase.swift in Sources */,
 				2738E42E1D0F678100B684B4 /* AppDelegate.swift in Sources */,
 				27DBB9BE1D21E4BC0038CA4A /* EXT.swift in Sources */,
@@ -438,16 +447,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "AudioFetch-SDK-Sample/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AF_Lib",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
+					"$(inherited)",
 					"-ObjC",
 					"-lstdc++",
 				);
@@ -464,16 +475,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "AudioFetch-SDK-Sample/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AF_Lib",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
+					"$(inherited)",
 					"-ObjC",
 					"-lstdc++",
 				);

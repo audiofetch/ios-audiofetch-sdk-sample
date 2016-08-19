@@ -2,7 +2,6 @@
 //  AppBase.swift
 //  audiofetch
 //
-//  Created by Patron on 5/16/16.
 //  Copyright © 2016 AudioFetch, Inc. All rights reserved.
 //
 
@@ -28,7 +27,6 @@ class AppBase: UIApplication {
                 notify.postNotificationName(backwardPressedNotification, object: nil)
             case .RemoteControlNextTrack:
                 notify.postNotificationName(forwardPressedNotification, object: nil)
-            
             case .RemoteControlPlay:
                 notify.postNotificationName(playPressedNotification, object: nil)
             case .RemoteControlPause:
