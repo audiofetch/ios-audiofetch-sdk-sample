@@ -34,7 +34,7 @@
                                 </connections>
                             </slider>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="whw-ol-FW9">
-                                <rect key="frame" x="0.0" y="271" width="600" height="265"/>
+                                <rect key="frame" x="0.0" y="238" width="600" height="298"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ZGz-Hu-VoX">
                                     <size key="itemSize" width="65" height="65"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -87,8 +87,9 @@
                                             <constraint firstItem="iAQ-cy-22l" firstAttribute="top" secondItem="SFm-8F-F7G" secondAttribute="topMargin" id="lit-0k-QPZ"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="channelLabel" destination="JLX-pv-8eg" id="QdG-ex-Tlv"/>
+                                            <outlet property="channelText" destination="A39-eD-Bkc" id="V7k-9w-QbL"/>
                                             <outlet property="iconView" destination="iAQ-cy-22l" id="AN6-4B-ap4"/>
-                                            <outlet property="title_LB" destination="A39-eD-Bkc" id="moh-DO-rg3"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -107,30 +108,15 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="iNV-Sv-Ifg">
+                                <rect key="frame" x="224" y="40" width="152" height="39"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="jgo-22-IWN">
                                 <rect key="frame" x="209" y="197" width="337" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwq-nr-qQp">
-                                <rect key="frame" x="57" y="231" width="144" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="gfM-Nl-lsZ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="57j-Vp-cAb">
-                                <rect key="frame" x="209" y="231" width="337" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="iNV-Sv-Ifg">
-                                <rect key="frame" x="224" y="40" width="152" height="39"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -142,21 +128,14 @@
                             <constraint firstItem="iNV-Sv-Ifg" firstAttribute="centerX" secondItem="iFB-Fd-lCR" secondAttribute="centerX" id="Djj-DW-qAi"/>
                             <constraint firstItem="aRO-3Y-amz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="37" id="E9r-Bv-rrW"/>
                             <constraint firstItem="iNV-Sv-Ifg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="40" id="FMJ-jk-pgu"/>
-                            <constraint firstItem="aRO-3Y-amz" firstAttribute="trailing" secondItem="Gwq-nr-qQp" secondAttribute="trailing" id="ICk-Mf-RZX"/>
-                            <constraint firstItem="Gwq-nr-qQp" firstAttribute="bottom" secondItem="57j-Vp-cAb" secondAttribute="bottom" id="JBV-ad-DNo"/>
-                            <constraint firstItem="jgo-22-IWN" firstAttribute="trailing" secondItem="57j-Vp-cAb" secondAttribute="trailing" id="KLQ-JM-tXM"/>
                             <constraint firstAttribute="trailing" secondItem="whw-ol-FW9" secondAttribute="trailing" id="Lhg-0L-ZIe"/>
                             <constraint firstItem="aRO-3Y-amz" firstAttribute="bottom" secondItem="jgo-22-IWN" secondAttribute="bottom" id="MSC-Tr-qk5"/>
-                            <constraint firstItem="Gwq-nr-qQp" firstAttribute="top" secondItem="aRO-3Y-amz" secondAttribute="bottom" constant="13" id="UPT-O1-mGj"/>
                             <constraint firstItem="iFB-Fd-lCR" firstAttribute="centerX" secondItem="dju-A3-TQy" secondAttribute="centerX" id="VQh-Fm-0BR"/>
                             <constraint firstItem="whw-ol-FW9" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="ca1-dn-qyg"/>
-                            <constraint firstItem="jgo-22-IWN" firstAttribute="leading" secondItem="57j-Vp-cAb" secondAttribute="leading" id="dcE-Ke-NS1"/>
-                            <constraint firstItem="Gwq-nr-qQp" firstAttribute="top" secondItem="57j-Vp-cAb" secondAttribute="top" id="eOD-Rr-t9J"/>
                             <constraint firstItem="dju-A3-TQy" firstAttribute="top" secondItem="iFB-Fd-lCR" secondAttribute="bottom" constant="8" symbolic="YES" id="eSm-64-IHB"/>
                             <constraint firstItem="dju-A3-TQy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="61" id="eqF-eh-CDW"/>
-                            <constraint firstItem="aRO-3Y-amz" firstAttribute="leading" secondItem="Gwq-nr-qQp" secondAttribute="leading" id="giz-gS-5yo"/>
+                            <constraint firstItem="whw-ol-FW9" firstAttribute="top" secondItem="jgo-22-IWN" secondAttribute="bottom" constant="20" id="lel-wV-gWh"/>
                             <constraint firstItem="aRO-3Y-amz" firstAttribute="top" secondItem="jgo-22-IWN" secondAttribute="top" id="mSs-af-uGL"/>
-                            <constraint firstItem="whw-ol-FW9" firstAttribute="top" secondItem="Gwq-nr-qQp" secondAttribute="bottom" constant="19" id="qdG-Pb-ldl"/>
                             <constraint firstItem="whw-ol-FW9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sK7-CA-sjo"/>
                         </constraints>
                     </view>
@@ -165,8 +144,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="collectionView" destination="whw-ol-FW9" id="hcg-kb-HKu"/>
-                        <outlet property="labelCurrentChannel" destination="jgo-22-IWN" id="oDt-8K-NHh"/>
-                        <outlet property="labelCurrentName" destination="57j-Vp-cAb" id="EwO-bE-D20"/>
+                        <outlet property="labelCurrentChannel" destination="aRO-3Y-amz" id="7kK-Nb-tg9"/>
+                        <outlet property="labelCurrentName" destination="jgo-22-IWN" id="RTL-G6-hEy"/>
+                        <outlet property="labelVolume" destination="iFB-Fd-lCR" id="P9o-tZ-CCl"/>
                         <outlet property="volumeSlider" destination="dju-A3-TQy" id="gIs-4B-F96"/>
                     </connections>
                 </viewController>

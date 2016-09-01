@@ -10,7 +10,8 @@ import UIKit
 
 class ChannelCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var title_LB: UILabel!
+    @IBOutlet weak var channelLabel: UILabel!
+    @IBOutlet weak var channelText: UILabel!
     @IBOutlet weak var iconView: UIView!
     
 }

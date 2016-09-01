@@ -63,6 +63,16 @@ func DLog(msg : String) {
 //============================================================================================*/
 
 /**
+ @brief Extensions for String
+ */
+extension String {
+    
+    var length:Int {
+        return (self as NSString).length
+    }
+}
+
+/**
 @brief UIColor extensions
 */
 extension UIColor {
