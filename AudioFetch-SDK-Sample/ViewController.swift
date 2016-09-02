@@ -133,7 +133,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             cell.iconView.layer.borderColor = APP_COLOR_ORANGE.CGColor
         }
         DLog("You selected cell #\(indexPath.item)!")
-        setAudioManagerChannel(indexPath.row)
+        currentChannelIndex = indexPath.row
+        labelCurrentName.text = getChannelName(currentChannelIndex)
+        setChannel(channelArray[currentChannelIndex])
         updateNowPlaying()
     }
     
@@ -190,9 +192,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         
                         afterDelay(0.5) {
                             // make the selection of grid view item happen through UI methods
-                            let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-                            self.collectionView(self.collectionView, didSelectItemAtIndexPath: indexPath)
-                            self.collectionView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .CenteredVertically)
+                            self.setUIChannel(0)
                         }
                         updateNowPlaying()
                     } else {
@@ -359,13 +359,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      */
     func setUIChannel(channelIdx : Int) {
         if channelIdx < self.channelArray.count {
-            
             let indexPath = NSIndexPath(forRow: channelIdx, inSection: 0)
             self.collectionView(self.collectionView, didSelectItemAtIndexPath: indexPath)
             self.collectionView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .CenteredVertically)
-            
-            let channel = self.channelArray[channelIdx]
-            setChannel(channel)
         }
     }
     
@@ -390,10 +386,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      */
     func setAudioManagerChannel(channel : Int) {
         let curCnl = UInt(channel)
-        if audioMgr.hasChannel(curCnl) && audioMgr.currentChannel != curCnl && channel < channelArray.count {
+        if audioMgr.hasChannel(curCnl) && channel < channelArray.count {
             audioMgr.currentChannel = curCnl
-            currentChannelIndex = channel
-            labelCurrentName.text = getChannelName(channel)
         }
     }
     
