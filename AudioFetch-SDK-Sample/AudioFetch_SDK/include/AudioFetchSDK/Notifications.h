@@ -43,7 +43,6 @@ FRAMEWORK_EXTERN NSString *const hardwareButtonVolumeNotification;
 FRAMEWORK_EXTERN NSString *const activeSerialNumberChangedNotification;
 
 
-// TODO: REMOVE THESE AND RESTORE AS MACROS AND MAKE INTERNAL
 FRAMEWORK_EXTERN NSString *const volumeChangedNotification;
 FRAMEWORK_EXTERN NSString *const playPressedNotification;
 FRAMEWORK_EXTERN NSString *const pausePressedNotification;

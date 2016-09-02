@@ -133,7 +133,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             cell.iconView.layer.borderColor = APP_COLOR_ORANGE.CGColor
         }
         DLog("You selected cell #\(indexPath.item)!")
-        setCurrentChannel(indexPath.row)
+        setAudioManagerChannel(indexPath.row)
         updateNowPlaying()
     }
     
@@ -196,11 +196,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         }
                         updateNowPlaying()
                     } else {
+                        // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
                         showNotConnectedMessage()
-                        
                     }
-                    self.discoSuccessCallbackCount += 1
+                    self.discoSuccessCallbackCount += 1 // prevent not connected message from showing
+                    
                 } else { // channelsLoadedNotificationChannelsKey == NSNull if no channels
+                    // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
                     fallthrough // fallthrough to deviceDiscoveryFailedNotification
                 }
             }
@@ -378,7 +380,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.selectedChannel = channel
             
             DLog("SWITCHING TO CHANNEL: \(switchToChannel)")
-            setCurrentChannel(switchToChannel)
+            setAudioManagerChannel(switchToChannel)
         }
         updateNowPlaying()
     }
@@ -386,7 +388,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     /**
      Sets AudioManager to the specified channel
      */
-    func setCurrentChannel(channel : Int) {
+    func setAudioManagerChannel(channel : Int) {
         let curCnl = UInt(channel)
         if audioMgr.hasChannel(curCnl) && audioMgr.currentChannel != curCnl && channel < channelArray.count {
             audioMgr.currentChannel = curCnl
