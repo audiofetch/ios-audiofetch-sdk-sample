@@ -152,21 +152,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     /**
-     Displays a toast message, similar to Android toast message
-     */
-    func makeToast(msg: String, _ duration: NSTimeInterval = 2.5, _ position: String = CSToastPositionBottom, _ viewController: UIViewController? = nil) {
-        if let vc = viewController {
-            if nil != vc.view {
-                vc.view.makeToast(msg, duration: duration, position: position)
-            }
-        } else if let win = self.window,
-            let vc = win.rootViewController where nil != vc.view {
-            vc.view.makeToast(msg, duration: duration, position: position)
-        }
-    }
-    
-    
-    /**
      Displays the Wifi settings screen in the settings app
      */
     func showWifiSettings() {

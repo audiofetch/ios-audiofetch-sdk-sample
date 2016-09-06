@@ -12,6 +12,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var volumeSlider: UISlider!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var labelError: UILabel!
     @IBOutlet weak var labelVolume: UILabel!
     @IBOutlet weak var labelCurrentChannel: UILabel!
     @IBOutlet weak var labelCurrentName: UILabel!
@@ -36,8 +37,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         discoSuccessCallbackCount = 0,
         discoFailureCallbackCount = 0
     
-    var hasShownWifiSettings = false,
-        hasShownWifiToast = false
+    var hasShownWifiSettings = false
     
     static var isWifiConnected = true
     
@@ -56,6 +56,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         labelVolume.font = APP_VOLUME_FONT
         labelCurrentChannel.font = APP_LABEL_FONT
+        labelError.font = APP_LABEL_FONT
         
         navigationItem.title = APP_NAME
         navigationController?.navigationBar.translucent = false
@@ -183,6 +184,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                     let audioMode = dict[channelsLoadedNotificationAudioModeKey] as? UInt { // 1 = mono, 2 = stereo
                     
                     if cnlList.count > 0 { // channels received from APBs
+                        labelError.hidden = true
                         app.hideHUD()
                         self.channelArray = cnlList
                         
@@ -337,11 +339,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func showNotConnectedMessage() {
         app.hideHUD()
         labelCurrentName.text = CHANNELS_NOT_LOADED
-        
-        if !hasShownWifiToast {
-            app.makeToast(STR_NO_CONNECTION, 5, CSToastPositionBottom, self)
-            hasShownWifiToast = true
-        }
+        labelError.hidden = false
+        labelError.text = STR_NO_CONNECTION
     }
     
     /**
