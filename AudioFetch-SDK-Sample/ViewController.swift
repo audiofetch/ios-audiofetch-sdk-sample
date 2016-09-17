@@ -101,7 +101,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         cell.channelText.font = UIFont(name: APP_PRIMARY_FONT_NAME, size: 14)
         cell.channelText.textColor = APP_COLOR_BLUE
-        cell.channelText.text = getChannelName((indexPath as NSIndexPath).row)
+        cell.channelText.text = getChannelName(indexPath.row)
         
         
         cell.channelLabel.font = UIFont(name: APP_BOLD_FONT_NAME, size: 14)
@@ -113,8 +113,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         cell.iconView.layer.masksToBounds = true
         
         cell.iconView.layer.borderColor = UIColor.gray.cgColor
-        if let selectedItem = collectionView.indexPathsForSelectedItems
-            , selectedItem.contains(indexPath) {
+        if let selectedItem = collectionView.indexPathsForSelectedItems,
+            selectedItem.contains(indexPath) {
             cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
         }
         return cell
@@ -133,8 +133,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         if let cell = collectionView.cellForItem(at: indexPath) as? ChannelCollectionViewCell {
             cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
         }
-        DLog("You selected cell #\((indexPath as NSIndexPath).item)!")
-        currentChannelIndex = (indexPath as NSIndexPath).row
+        DLog("You selected cell #\(indexPath.item)!")
+        currentChannelIndex = indexPath.row
         labelCurrentName.text = getChannelName(currentChannelIndex)
         setChannel(channelArray[currentChannelIndex])
         updateNowPlaying()
@@ -171,14 +171,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
         //==================================================
         // MAIN DISCOVERY FINISHED: userInfo contains all the channels for UI to display
-        case NSNotification.Name.channelsLoaded where nil != (notification as NSNotification).userInfo: // triggered in AudioManager after discovery
+        case NSNotification.Name.channelsLoaded where nil != notification.userInfo: // triggered in AudioManager after discovery
             afterDelay(0.7) {
                 if 0 == self.discoSuccessCallbackCount { // only trigger on first failure callback
                     self.showNotConnectedMessage()
                 }
             }
-            if let dict = (notification as NSNotification).userInfo as? [String : AnyObject]
-                , nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
+            if let dict = notification.userInfo as? [String : AnyObject],
+                nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
                 
                 if let cnlList = dict[channelsLoadedNotificationChannelsKey] as? [Channel], // channel list
                     let audioMode = dict[channelsLoadedNotificationAudioModeKey] as? UInt { // 1 = mono, 2 = stereo
