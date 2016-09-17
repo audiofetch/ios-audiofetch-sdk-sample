@@ -13,50 +13,38 @@
 #define FRAMEWORK_EXTERN      extern __attribute__((visibility ("default")))
 #endif
 
-// TODO: SDK rename all these to have the NOTIFY_ prefix and use uppercase
-// TODO: SDK possibly standardize on the same events that Android app uses so SDK's will jive
-// TODO: SDK consider using similar events for notificatons bubbled up to swift so that a common class object can be shared rather than random undefined objects
-// TODO: SDK define these said event classes, as already defined by the java implementation
+// NOTIFICATIONS
+FRAMEWORK_EXTERN NSNotificationName const reloadNSUserDefaultsNotification;
+FRAMEWORK_EXTERN NSNotificationName const apbDiscoveredNotification;
+FRAMEWORK_EXTERN NSNotificationName const lowAudioNotification;
 
-FRAMEWORK_EXTERN NSString *const reloadNSUserDefaultsNotification;
-FRAMEWORK_EXTERN NSString *const apbDiscoveredNotification;
-FRAMEWORK_EXTERN NSString *const lowAudioNotification;
+FRAMEWORK_EXTERN NSNotificationName const networkConnectionNotification;
+FRAMEWORK_EXTERN NSNotificationName const demoModeToggledNotification;
+FRAMEWORK_EXTERN NSNotificationName const diagnosticModeToggledNotification;
+FRAMEWORK_EXTERN NSNotificationName const deviceDiscoveryFinishedNotification;
+FRAMEWORK_EXTERN NSNotificationName const audioBufferUpdateNotification;
+FRAMEWORK_EXTERN NSNotificationName const emailSentNotification;
+FRAMEWORK_EXTERN NSNotificationName const deviceDiscoveryFailedNotification;
+FRAMEWORK_EXTERN NSNotificationName const hardwareButtonVolumeNotification;
+FRAMEWORK_EXTERN NSNotificationName const activeSerialNumberChangedNotification;
+FRAMEWORK_EXTERN NSNotificationName const volumeChangedNotification;
+FRAMEWORK_EXTERN NSNotificationName const playPressedNotification;
+FRAMEWORK_EXTERN NSNotificationName const pausePressedNotification;
+FRAMEWORK_EXTERN NSNotificationName const stopPressedNotification;
+FRAMEWORK_EXTERN NSNotificationName const forwardPressedNotification;
+FRAMEWORK_EXTERN NSNotificationName const backwardPressedNotification;
+FRAMEWORK_EXTERN NSNotificationName const otherPressedNotification;
 
-FRAMEWORK_EXTERN NSString *const networkConnectionNotification;
-FRAMEWORK_EXTERN NSString *const demoModeToggledNotification;
-FRAMEWORK_EXTERN NSString *const diagnosticModeToggledNotification;
-FRAMEWORK_EXTERN NSString *const deviceDiscoveryFinishedNotification;
-
-FRAMEWORK_EXTERN NSString *const audioBufferUpdateNotification;
-
-FRAMEWORK_EXTERN NSString *const emailSentNotification;
-
-FRAMEWORK_EXTERN NSString *const deviceDiscoveryFailedNotification;
-FRAMEWORK_EXTERN NSString *const channelsLoadedNotification;
+FRAMEWORK_EXTERN NSNotificationName const channelsLoadedNotification;
 FRAMEWORK_EXTERN NSString *const channelsLoadedNotificationChannelsKey;
 FRAMEWORK_EXTERN NSString *const channelsLoadedNotificationAudioModeKey;
 
 
 
-FRAMEWORK_EXTERN NSString *const hardwareButtonVolumeNotification;
-
-FRAMEWORK_EXTERN NSString *const activeSerialNumberChangedNotification;
-
-
-FRAMEWORK_EXTERN NSString *const volumeChangedNotification;
-FRAMEWORK_EXTERN NSString *const playPressedNotification;
-FRAMEWORK_EXTERN NSString *const pausePressedNotification;
-FRAMEWORK_EXTERN NSString *const stopPressedNotification;
-FRAMEWORK_EXTERN NSString *const forwardPressedNotification;
-FRAMEWORK_EXTERN NSString *const backwardPressedNotification;
-FRAMEWORK_EXTERN NSString *const otherPressedNotification;
-
-
-
-
-
+// FONTS
 FRAMEWORK_EXTERN NSString *const K_APP_FONT_NAME;
 
+// COLORS
 FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLACK;
 FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLUE;
 FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_ORANGE;
