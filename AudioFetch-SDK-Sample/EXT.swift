@@ -12,9 +12,9 @@ import Foundation
 /**
 @brief Replacement for Obj-C @synchronized block
 */
-func synced(closure: () -> ()) {
-    let lockQueue = dispatch_queue_create("com.audiofetch.LockQueue", nil)
-    dispatch_sync(lockQueue) {
+func synced(_ closure: () -> ()) {
+    let lockQueue = DispatchQueue(label: "com.audiofetch.LockQueue")
+    lockQueue.sync {
         closure()
     }
 }
@@ -22,8 +22,8 @@ func synced(closure: () -> ()) {
 /**
  @brief runs code in background
  */
-func runInBackground(closure: () -> ()) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+func runInBackground(_ closure: @escaping () -> ()) {
+    DispatchQueue.global().async {
         closure()
     }
 }
@@ -31,20 +31,16 @@ func runInBackground(closure: () -> ()) {
 /**
  Runs block on main UIs
  */
-func runOnUiThread(closure : () -> ()) {
-    dispatch_async(dispatch_get_main_queue(), closure)
+func runOnUiThread(_ closure : @escaping () -> ()) {
+    DispatchQueue.main.async(execute: closure)
 }
 
 /**
  Executes a task after delay
  */
-func afterDelay(delay:Double, _ closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+func afterDelay(_ delay:Double, _ closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 
 /**
@@ -52,7 +48,7 @@ func afterDelay(delay:Double, _ closure:()->()) {
  
  @param msg - String to printed
  */
-func DLog(msg : String) {
+func DLog(_ msg : String) {
     if _isDebugAssertConfiguration() {
         print("\n\n======>>>>>>>\n\(msg)\n")
     }

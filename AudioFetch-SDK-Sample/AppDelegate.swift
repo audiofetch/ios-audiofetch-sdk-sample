@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    lazy var sharedApplication = UIApplication.sharedApplication()
+    lazy var sharedApplication = UIApplication.shared
 
     /*=========================================
      // MARK: - INIT AND SINGLETON
@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     class var sharedInstance:AppDelegate {
         get {
-            return UIApplication.sharedApplication().delegate! as! AppDelegate
+            return UIApplication.shared.delegate! as! AppDelegate
         }
     }
     
@@ -41,11 +41,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /**
      Runs block on main thread
      */
-    func runOnMainThread(closure : () -> ()) {
-        dispatch_async(dispatch_get_main_queue(), closure)
+    func runOnMainThread(_ closure : @escaping () -> ()) {
+        DispatchQueue.main.async(execute: closure)
     }
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         sharedApplication.beginReceivingRemoteControlEvents()
         registerDefaults()
@@ -53,25 +53,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
@@ -89,12 +89,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      
      @param action - Provide an alt to ok only action
      */
-    func alert(title : String, _ msg : String = "", _ action: UIAlertAction) {
+    func alert(_ title : String, _ msg : String = "", _ action: UIAlertAction) {
         runOnUiThread {
-            let alertDlg = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
+            let alertDlg = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertDlg.addAction(action)
             if let vc = self.window?.rootViewController {
-                vc.presentViewController(alertDlg, animated: true, completion: nil)
+                vc.present(alertDlg, animated: true, completion: nil)
             }
         }
     }
@@ -106,17 +106,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      
      @param title [optional]
      */
-    func showHUD(msg : String) {
+    func showHUD(_ msg : String) {
         if let win = self.window {
             if let view = win.rootViewController?.view {
-                if nil == self.dynamicType.HUD {
-                    self.dynamicType.HUD = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                    self.dynamicType.HUD.mode = .Indeterminate
-                    self.dynamicType.isHUDShowing = true
+                if nil == type(of: self).HUD {
+                    type(of: self).HUD = MBProgressHUD.showAdded(to: view, animated: true)
+                    type(of: self).HUD.mode = .indeterminate
+                    type(of: self).isHUDShowing = true
                 }
                 
-                if nil != self.dynamicType.HUD {
-                    self.dynamicType.HUD.labelText = msg
+                if nil != type(of: self).HUD {
+                    type(of: self).HUD.labelText = msg
                 } else {
                     DLog("FAILED TO SHOW HUD!!!!")
                 }
@@ -131,10 +131,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      
      @param title [optional]
      */
-    func updateHUD(msg : String) {
-        if nil != self.dynamicType.HUD {
-            self.dynamicType.HUD.labelText = msg
-            self.dynamicType.isHUDShowing = true
+    func updateHUD(_ msg : String) {
+        if nil != type(of: self).HUD {
+            type(of: self).HUD.labelText = msg
+            type(of: self).isHUDShowing = true
         } else {
             showHUD(msg)
         }
@@ -144,11 +144,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      Hides the progress HUD
      */
     func hideHUD() {
-        if nil != self.dynamicType.HUD {
-            self.dynamicType.HUD.hide(true)
-            self.dynamicType.HUD = nil
+        if nil != type(of: self).HUD {
+            type(of: self).HUD.hide(true)
+            type(of: self).HUD = nil
         }
-        self.dynamicType.isHUDShowing = false
+        type(of: self).isHUDShowing = false
     }
     
     /**
@@ -156,7 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      */
     func showWifiSettings() {
         runOnUiThread {
-            UIApplication.sharedApplication().openURL(NSURL(string: "prefs:root=WIFI")!)
+            UIApplication.shared.openURL(URL(string: "prefs:root=WIFI")!)
         }
     }
     
@@ -165,9 +165,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      */
     func registerDefaults() {
         let defaults:[String : AnyObject] = [
-            PREF_LAST_VOLUME : NSNumber(float: PREF_LAST_VOLUME_DEFAULT)
+            PREF_LAST_VOLUME : NSNumber(value: PREF_LAST_VOLUME_DEFAULT as Float)
         ]
-        NSUserDefaults.standardUserDefaults().registerDefaults(defaults)
+        UserDefaults.standard.register(defaults: defaults)
     }
     
     /**
@@ -179,12 +179,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if let navVc = win.rootViewController as? UINavigationController,
                 let rootVc = navVc.viewControllers[0] as? ViewController {
-                rootVc.view.backgroundColor = UIColor.whiteColor()
+                rootVc.view.backgroundColor = UIColor.white
                 
                 // add a system volume control so that the volume dialog doesn't show
-                let volumeView = MPVolumeView(frame: CGRectMake(-2000, -2000, 0, 0))
+                let volumeView = MPVolumeView(frame: CGRect(x: -2000, y: -2000, width: 0, height: 0))
                 volumeView.alpha = 1
-                volumeView.userInteractionEnabled = false
+                volumeView.isUserInteractionEnabled = false
                 win.addSubview(volumeView)
             }
         }
@@ -192,7 +192,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navBar = UINavigationBar.appearance()
         navBar.barTintColor = APP_COLOR_BLUE
         navBar.titleTextAttributes = [ NSFontAttributeName : APP_NAVBAR_FONT,
-                                       NSForegroundColorAttributeName: UIColor.whiteColor() ]
+                                       NSForegroundColorAttributeName: UIColor.white ]
         
         let slider = UISlider.appearance()
         slider.maximumTrackTintColor = APP_COLOR_SILVER

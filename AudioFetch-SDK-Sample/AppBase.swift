@@ -8,9 +8,9 @@
 import UIKit
 
 class AppBase: UIApplication {
-    lazy var notify = NSNotificationCenter.defaultCenter()
+    lazy var notify = NotificationCenter.default
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
@@ -19,20 +19,20 @@ class AppBase: UIApplication {
      
      @param event - UIEvent
      */
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+    override func remoteControlReceived(with event: UIEvent?) {
         if let evt = event {
             DLog("Received remote control event: \(evt)\n")
             switch evt.subtype {
-            case .RemoteControlPreviousTrack:
-                notify.postNotificationName(backwardPressedNotification, object: nil)
-            case .RemoteControlNextTrack:
-                notify.postNotificationName(forwardPressedNotification, object: nil)
-            case .RemoteControlPlay:
-                notify.postNotificationName(playPressedNotification, object: nil)
-            case .RemoteControlPause:
-                notify.postNotificationName(pausePressedNotification, object: nil)
-            case .RemoteControlStop:
-                notify.postNotificationName(stopPressedNotification, object: nil)
+            case .remoteControlPreviousTrack:
+                notify.post(name: NSNotification.Name.backwardPressed, object: nil)
+            case .remoteControlNextTrack:
+                notify.post(name: NSNotification.Name.forwardPressed, object: nil)
+            case .remoteControlPlay:
+                notify.post(name: NSNotification.Name.playPressed, object: nil)
+            case .remoteControlPause:
+                notify.post(name: NSNotification.Name.pausePressed, object: nil)
+            case .remoteControlStop:
+                notify.post(name: NSNotification.Name.stopPressed, object: nil)
             default:
                 break
             }

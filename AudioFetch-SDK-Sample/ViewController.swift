@@ -17,19 +17,19 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var labelCurrentChannel: UILabel!
     @IBOutlet weak var labelCurrentName: UILabel!
     
-    private let CELL_CHANNEL = "ChannelCell" // also enter this string as the cell identifier in the storyboard
+    fileprivate let CELL_CHANNEL = "ChannelCell" // also enter this string as the cell identifier in the storyboard
     
     /*===========================
     // MARK: - DATA MEMBERS
     //===========================*/
     
-    private lazy var app = AppDelegate.sharedInstance
-    private lazy var notify = NSNotificationCenter.defaultCenter()
-    private lazy var mediaInfo = MPNowPlayingInfoCenter.defaultCenter()
-    private lazy var prefs = NSUserDefaults.standardUserDefaults()
+    fileprivate lazy var app = AppDelegate.sharedInstance
+    fileprivate lazy var notify = NotificationCenter.default
+    fileprivate lazy var mediaInfo = MPNowPlayingInfoCenter.default()
+    fileprivate lazy var prefs = UserDefaults.standard
     
     // business colleagues
-    private lazy var audioMgr = AudioManager.sharedInstance()
+    fileprivate lazy var audioMgr = AudioManager.sharedInstance()!
     
     var channelArray = [Channel]()
     var selectedChannel:Channel?
@@ -48,7 +48,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.backgroundColor = UIColor.clear
         
         labelCurrentName.font = APP_LABEL_FONT
         labelCurrentName.text = LOADING_CHANNELS
@@ -59,7 +59,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         labelError.font = APP_LABEL_FONT
         
         navigationItem.title = APP_NAME
-        navigationController?.navigationBar.translucent = false
+        navigationController?.navigationBar.isTranslucent = false
         
         if !audioMgr.isAudioPlaying {
             // show fetching audio message for a few seconds while discovery finishes
@@ -70,16 +70,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         
         afterDelay(1.2) {
-            self.setVolume(self.prefs.floatForKey(PREF_LAST_VOLUME))
+            self.setVolume(self.prefs.float(forKey: PREF_LAST_VOLUME))
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         initNotifications()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         notify.removeObserver(self)
     }
     
@@ -87,35 +87,35 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      // MARK: - UICollectionViewDataSource
      //====================*/
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return channelArray.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CELL_CHANNEL, forIndexPath: indexPath) as! ChannelCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_CHANNEL, for: indexPath) as! ChannelCollectionViewCell
         
         cell.channelText.font = UIFont(name: APP_PRIMARY_FONT_NAME, size: 14)
         cell.channelText.textColor = APP_COLOR_BLUE
-        cell.channelText.text = getChannelName(indexPath.row)
+        cell.channelText.text = getChannelName((indexPath as NSIndexPath).row)
         
         
         cell.channelLabel.font = UIFont(name: APP_BOLD_FONT_NAME, size: 14)
         cell.channelLabel.textColor = APP_COLOR_BLUE
-        cell.backgroundColor = UIColor.clearColor()
+        cell.backgroundColor = UIColor.clear
         cell.iconView.backgroundColor = APP_COLOR_SILVER
         cell.iconView.layer.cornerRadius = 6.0
         cell.iconView.layer.borderWidth = 1.0
         cell.iconView.layer.masksToBounds = true
         
-        cell.iconView.layer.borderColor = UIColor.grayColor().CGColor
-        if let selectedItem = collectionView.indexPathsForSelectedItems()
-            where selectedItem.contains(indexPath) {
-            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.CGColor
+        cell.iconView.layer.borderColor = UIColor.gray.cgColor
+        if let selectedItem = collectionView.indexPathsForSelectedItems
+            , selectedItem.contains(indexPath) {
+            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
         }
         return cell
     }
@@ -124,17 +124,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     // MARK: - UICollectionViewDelegate
     //====================*/
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        for cell in collectionView.visibleCells() {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        for cell in collectionView.visibleCells {
             if let iconCell = cell as? ChannelCollectionViewCell {
-                iconCell.iconView.layer.borderColor = UIColor.grayColor().CGColor
+                iconCell.iconView.layer.borderColor = UIColor.gray.cgColor
             }
         }
-        if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? ChannelCollectionViewCell {
-            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.CGColor
+        if let cell = collectionView.cellForItem(at: indexPath) as? ChannelCollectionViewCell {
+            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
         }
-        DLog("You selected cell #\(indexPath.item)!")
-        currentChannelIndex = indexPath.row
+        DLog("You selected cell #\((indexPath as NSIndexPath).item)!")
+        currentChannelIndex = (indexPath as NSIndexPath).row
         labelCurrentName.text = getChannelName(currentChannelIndex)
         setChannel(channelArray[currentChannelIndex])
         updateNowPlaying()
@@ -149,12 +149,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      */
     func initNotifications() {
         let notificationsToObserve = [
-            channelsLoadedNotification,
-            deviceDiscoveryFailedNotification,
-            forwardPressedNotification,
-            backwardPressedNotification,
-            networkConnectionNotification,
-            hardwareButtonVolumeNotification
+            NSNotification.Name.channelsLoaded,
+            NSNotification.Name.deviceDiscoveryFailed,
+            NSNotification.Name.forwardPressed,
+            NSNotification.Name.backwardPressed,
+            NSNotification.Name.networkConnection,
+            NSNotification.Name.hardwareButtonVolume
         ]
         for notification in notificationsToObserve {
             notify.addObserver(self, selector: #selector(ViewController.handleNotifications(_:)), name: notification, object: nil)
@@ -166,25 +166,25 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      
      @param notification - NSNotification to be processed
      */
-    func handleNotifications(notification : NSNotification) {
+    func handleNotifications(_ notification : Notification) {
         switch notification.name {
             
         //==================================================
         // MAIN DISCOVERY FINISHED: userInfo contains all the channels for UI to display
-        case channelsLoadedNotification where nil != notification.userInfo: // triggered in AudioManager after discovery
+        case NSNotification.Name.channelsLoaded where nil != (notification as NSNotification).userInfo: // triggered in AudioManager after discovery
             afterDelay(0.7) {
                 if 0 == self.discoSuccessCallbackCount { // only trigger on first failure callback
                     self.showNotConnectedMessage()
                 }
             }
-            if let dict = notification.userInfo as? [String : AnyObject]
-                where nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
+            if let dict = (notification as NSNotification).userInfo as? [String : AnyObject]
+                , nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
                 
                 if let cnlList = dict[channelsLoadedNotificationChannelsKey] as? [Channel], // channel list
                     let audioMode = dict[channelsLoadedNotificationAudioModeKey] as? UInt { // 1 = mono, 2 = stereo
                     
                     if cnlList.count > 0 { // channels received from APBs
-                        labelError.hidden = true
+                        labelError.isHidden = true
                         app.hideHUD()
                         self.channelArray = cnlList
                         
@@ -210,7 +210,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }
         //==================================================
         // DISCOVERY FAILED
-        case deviceDiscoveryFailedNotification:
+        case NSNotification.Name.deviceDiscoveryFailed:
             if 0 == discoFailureCallbackCount {
                 // load a default set of channels
                 showNotConnectedMessage()
@@ -219,17 +219,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
         //==================================================
         // hardware volume button notification, object contains volume as float between 0 and 1
-        case hardwareButtonVolumeNotification where nil != notification.object:
+        case NSNotification.Name.hardwareButtonVolume where nil != notification.object:
             if let obj = notification.object,
                 let volume = obj as? Float {
                 volumeSlider.value = volume
-                prefs.setFloat(volumeSlider.value, forKey: PREF_LAST_VOLUME)
+                prefs.set(volumeSlider.value, forKey: PREF_LAST_VOLUME)
                 prefs.synchronize()
             }
             
         //==================================================
         // lock-screen media controls notifications
-        case forwardPressedNotification:
+        case NSNotification.Name.forwardPressed:
             var idx = -1
             if (self.channelArray.count > (currentChannelIndex + 1)) {
                 idx = currentChannelIndex + 1
@@ -243,7 +243,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 }
             }
             
-        case backwardPressedNotification:
+        case NSNotification.Name.backwardPressed:
             var idx = -1
             if (currentChannelIndex - 1) >= 0 {
                 idx = currentChannelIndex - 1
@@ -260,11 +260,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
         //==================================================
         // wifi toggled/dropped notification, object contains a Bool
-        case networkConnectionNotification where nil != notification.object:
+        case NSNotification.Name.networkConnection where nil != notification.object:
             if let ob = notification.object {
-                self.dynamicType.isWifiConnected = nil != (ob as? Bool) ? (ob as! Bool) : false
+                type(of: self).isWifiConnected = nil != (ob as? Bool) ? (ob as! Bool) : false
                 
-                if self.dynamicType.isWifiConnected {
+                if type(of: self).isWifiConnected {
                     if !audioMgr.isAudioPlaying {
                         audioMgr.startAudio()
                     }
@@ -274,9 +274,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         audioMgr.stopAudio()
                     }
                     
-                    let okAction = UIAlertAction(title: STR_OK, style: .Default, handler: { (action) in
+                    let okAction = UIAlertAction(title: STR_OK, style: .default, handler: { (action) in
                         if !self.hasShownWifiSettings {
-                            if !self.dynamicType.isWifiConnected {
+                            if !type(of: self).isWifiConnected {
                                 self.app.showWifiSettings()
                             }
                             self.hasShownWifiSettings = true
@@ -297,7 +297,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     /**
      Calls setVolume and sets the volume
      */
-    @IBAction func volumeChanged(sender : AnyObject?) {
+    @IBAction func volumeChanged(_ sender : AnyObject?) {
         setVolume(volumeSlider.value)
     }
     
@@ -309,18 +309,19 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      Updates the lock-screen and MPNowPlayingInfoCenter
      */
     func updateNowPlaying() {
-        let productName = NSBundle.mainBundle().infoDictionary?["CFBundleDisplayName"] ?? APP_NAME
+        let productName = Bundle.main.infoDictionary?["CFBundleDisplayName"] ?? APP_NAME
         
         if let icon = UIImage(named: "icon-512") {
             let albumArt = MPMediaItemArtwork(image: icon)
-            var channelName = String(format:STR_CHANNEL_NUM, NSNumber(unsignedLong: audioMgr.currentChannel + 1))
+            let curChannel = audioMgr.currentChannel + 1
+            var channelName = String(format:STR_CHANNEL_NUM, NSNumber(value: curChannel))
             
-            if let currentCnl = selectedChannel
-                where nil != currentCnl.name && !currentCnl.name.isEmpty {
-                channelName = String(format:STR_CHANNEL_NUM, currentCnl.name).uppercaseString
+            if let currentCnl = selectedChannel,
+                nil != currentCnl.name && !currentCnl.name.isEmpty {
+                channelName = String(format:STR_CHANNEL_NUM, currentCnl.name).uppercased()
             } else if Int(audioMgr.currentChannel) < channelArray.count {
                 let cnl = channelArray[Int(audioMgr.currentChannel)]
-                channelName = String(format:STR_CHANNEL_NUM, cnl.name).uppercaseString
+                channelName = String(format:STR_CHANNEL_NUM, cnl.name).uppercased()
             }
             
             self.mediaInfo.nowPlayingInfo = [
@@ -339,35 +340,35 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     func showNotConnectedMessage() {
         app.hideHUD()
         labelCurrentName.text = CHANNELS_NOT_LOADED
-        labelError.hidden = false
+        labelError.isHidden = false
         labelError.text = STR_NO_CONNECTION
     }
     
     /**
      Sets the volume on the AudioManager
      */
-    func setVolume(volume : Float) {
+    func setVolume(_ volume : Float) {
         DLog("SYSTEM VOLUME CHANGING TO: \(volume)")
         audioMgr.volume = volume
-        prefs.setFloat(volumeSlider.value, forKey: PREF_LAST_VOLUME)
+        prefs.set(volumeSlider.value, forKey: PREF_LAST_VOLUME)
         prefs.synchronize()
     }
     
     /**
      Sets the channel by changing the UI
      */
-    func setUIChannel(channelIdx : Int) {
+    func setUIChannel(_ channelIdx : Int) {
         if channelIdx < self.channelArray.count {
-            let indexPath = NSIndexPath(forRow: channelIdx, inSection: 0)
-            self.collectionView(self.collectionView, didSelectItemAtIndexPath: indexPath)
-            self.collectionView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .CenteredVertically)
+            let indexPath = IndexPath(row: channelIdx, section: 0)
+            self.collectionView(self.collectionView, didSelectItemAt: indexPath)
+            self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
         }
     }
     
     /**
      Sets the current channel, by determining the actual APB channel number
      */
-    func setChannel(channel : Channel) {
+    func setChannel(_ channel : Channel) {
         let apbIdx = Int(channel.apbIndex)
         if audioMgr.allApbs.count > apbIdx,
             let apbs = audioMgr.allApbs as? [Apb] {
@@ -375,7 +376,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.selectedChannel = channel
             
             DLog("SWITCHING TO CHANNEL: \(switchToChannel)")
-            setAudioManagerChannel(switchToChannel)
+            setAudioManagerChannel(Int(switchToChannel))
         }
         updateNowPlaying()
     }
@@ -383,9 +384,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     /**
      Sets AudioManager to the specified channel
      */
-    func setAudioManagerChannel(channel : Int) {
+    func setAudioManagerChannel(_ channel : Int) {
         let curCnl = UInt(channel)
-        if audioMgr.hasChannel(curCnl) && channel < channelArray.count {
+        if audioMgr.hasChannel(curCnl) {
             audioMgr.currentChannel = curCnl
         }
     }
@@ -394,16 +395,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     /**
      @return Returns the name for the given channel number
      */
-    func getChannelName(channel : Int) -> String {
+    func getChannelName(_ channel : Int) -> String {
         var cnlName = String(format: "%d", channel)
         
         if channel < channelArray.count {
             let cnl = channelArray[channel]
             if nil != cnl.name && !cnl.name.isEmpty {
                 if cnl.name.length > 5 {
-                    cnlName = cnl.name.uppercaseString.substringToIndex(cnl.name.startIndex.advancedBy(5))
+                    cnlName = cnl.name.substring(to: cnl.name.characters.index(cnl.name.startIndex, offsetBy: 5)).uppercased()
                 } else {
-                    cnlName = cnl.name.uppercaseString
+                    cnlName = cnl.name.uppercased()
                 }
             }
         }
