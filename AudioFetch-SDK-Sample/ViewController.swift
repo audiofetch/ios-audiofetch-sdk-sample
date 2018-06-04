@@ -166,7 +166,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
      
      @param notification - NSNotification to be processed
      */
-    func handleNotifications(_ notification : Notification) {
+    @objc func handleNotifications(_ notification : Notification) {
         switch notification.name {
             
         //==================================================
@@ -402,7 +402,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             let cnl = channelArray[channel]
             if nil != cnl.name && !cnl.name.isEmpty {
                 if cnl.name.length > 5 {
-                    cnlName = cnl.name.substring(to: cnl.name.characters.index(cnl.name.startIndex, offsetBy: 5)).uppercased()
+                    cnlName = NSString(string: cnl.name).substring(to: 5).uppercased()
                 } else {
                     cnlName = cnl.name.uppercased()
                 }

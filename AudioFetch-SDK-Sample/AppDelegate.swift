@@ -191,8 +191,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navBar = UINavigationBar.appearance()
         navBar.barTintColor = APP_COLOR_BLUE
-        navBar.titleTextAttributes = [ NSFontAttributeName : APP_NAVBAR_FONT,
-                                       NSForegroundColorAttributeName: UIColor.white ]
+        navBar.titleTextAttributes = [ NSAttributedStringKey.font : APP_NAVBAR_FONT,
+                                       NSAttributedStringKey.foregroundColor: UIColor.white ]
         
         let slider = UISlider.appearance()
         slider.maximumTrackTintColor = APP_COLOR_SILVER
