@@ -70,7 +70,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         
         afterDelay(1.2) {
-            self.setVolume(self.prefs.float(forKey: PREF_LAST_VOLUME))
+            self.setVolume(0.2)
         }
     }
     
