@@ -192,9 +192,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         labelCurrentName.text = channelArray[0].name
                         collectionView.reloadData() // load UI channel grid first time
                         
+                        let startingChannel = 0
+                        audioMgr.startAudio(on: UInt(startingChannel))
                         afterDelay(0.5) {
                             // make the selection of grid view item happen through UI methods
-                            self.setUIChannel(0)
+                            self.setUIChannel(startingChannel)
                         }
                         updateNowPlaying()
                     } else {

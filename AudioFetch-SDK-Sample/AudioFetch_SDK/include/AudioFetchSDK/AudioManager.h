@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-
 #import "Apb.h"
 
 @interface AudioManager : NSObject <AVAudioPlayerDelegate>
@@ -16,55 +15,113 @@
 // MARK: SINGLETON
 //===================================*/
 
+
+/**
+ Singleton
+
+ @return AudioManager
+ */
 + (instancetype) sharedInstance;
 
 /*====================================
 // MARK: PUBLIC METHODS
 //===================================*/
 
+/**
+ Start the audio
+
+ @return YES if successful, NO otherwise
+ */
 - (BOOL)startAudio;
+
+/**
+ Start the audio on specified channel
+
+ @param channel The channel, on which to start playing audio.
+ @return YES if successful, NO otherwise
+ */
+- (BOOL)startAudioOn:(NSUInteger) channel;
+
+/**
+ Stops the audio
+ */
 - (void)stopAudio;
+
+/**
+ Deallocates the audio
+ */
 - (void)deallocAudio;
 
+/**
+ Play a demo track
+
+ @param channel The demo channel
+ */
 - (void)playDemoTrack:(NSUInteger) channel;
 
+/**
+ Returns YES if the channel exists, NO otherwise
+
+ @param channel The channel in question
+ @return Returns YES if the channel exists, NO otherwise
+ */
 - (BOOL)hasChannel:(NSUInteger) channel;
 
+/**
+ Starts the audio check
+ */
 - (void)startAudioCheck;
-- (void)stopAudioCheck;
-- (void)audioCheck;
-- (void)audioCheckTimeout;
 
-/*
-- (void)sendStartReport;
-- (void)sendPingReport;
-- (void)sendAdsReport:(NSArray *) ads;
-- (void)sendAdClickedReport:(int) adId;
-- (void)deallocReporting;
-*/
+/**
+ Stops the audio check
+ */
+- (void)stopAudioCheck;
+
+/**
+ Audio check
+ */
+- (void)audioCheck;
+
+
+/**
+ Audio check timeout
+ */
+- (void)audioCheckTimeout;
 
 /*====================================
 // MARK: PUBLIC PROPERTIES
 //===================================*/
 
-// TODO: finish commenting for SDK
 
+/**
+ Whether audio is playing, or not
+ */
 @property (readonly) BOOL isAudioPlaying;
-@property(readwrite) BOOL demoModeEnabled;
-@property(readwrite) BOOL holdAudioSession;
-@property(readonly) BOOL isExpressDevice;
-@property(readwrite) float volume;
 
-// comment or remove for SDK, dont expose buffer
-@property(readonly) float* floatBuffer;
-@property(readonly) UInt32 floatBufferSize;
+/**
+ Whether demo mode is enabled, or not
+ */
+@property(readwrite) BOOL demoModeEnabled;
+
+/**
+ Whether the audio session is being held, or not
+ */
+@property(readwrite) BOOL holdAudioSession;
+
+/**
+ Whether the single APB is an express device
+ */
+@property(readonly) BOOL isExpressDevice;
+
+/**
+ What the volume level currently is set at (between 0 and 1)
+ */
+@property(readwrite) float volume;
 
 /**
  The currently selected channel
  */
 @property(readwrite) NSUInteger currentChannel;
-
-// TODO: refactor out Apb reference
 
 /**
  The apb that is currently being accessed or nil
