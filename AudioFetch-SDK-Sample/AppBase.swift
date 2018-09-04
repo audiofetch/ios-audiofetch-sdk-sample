@@ -14,11 +14,10 @@ class AppBase: UIApplication {
         return true
     }
     
-    /**
-     Sends notification events for remote control use in control center
-     
-     @param event - UIEvent
-     */
+    
+    /// Sends notification events for remote control use in control center
+    ///
+    /// - Parameter event: 
     override func remoteControlReceived(with event: UIEvent?) {
         if let evt = event {
             DLog("Received remote control event: \(evt)\n")

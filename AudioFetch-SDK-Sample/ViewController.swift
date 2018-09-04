@@ -16,8 +16,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var labelVolume: UILabel!
     @IBOutlet weak var labelCurrentChannel: UILabel!
     @IBOutlet weak var labelCurrentName: UILabel!
+    var toolbarButton: UIBarButtonItem!
     
-    fileprivate let CELL_CHANNEL = "ChannelCell" // also enter this string as the cell identifier in the storyboard
+    fileprivate let cellChannel = "ChannelCell" // also enter this string as the cell identifier in the storyboard
+    
+    /// Set this to the channel, on which, you want the player to start playing audio.
+    fileprivate let startingChannel = 1
     
     /*===========================
     // MARK: - DATA MEMBERS
@@ -37,7 +41,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         discoSuccessCallbackCount = 0,
         discoFailureCallbackCount = 0
     
-    var hasShownWifiSettings = false
+    var hasShownWifiSettings = false,
+        isPlaying = true
     
     static var isWifiConnected = true
     
@@ -60,6 +65,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         navigationItem.title = APP_NAME
         navigationController?.navigationBar.isTranslucent = false
+        
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbarButton = UIBarButtonItem(image: UIImage(named: "ic_pause"), style: .plain, target: self, action: #selector(playPauseTapped(_:)))
+        toolbarButton.tintColor = UIColor.white
+        navigationController?.isToolbarHidden = false
+        navigationController?.toolbar.backgroundColor = APP_COLOR_ORANGE
+        setToolbarItems([flexSpace, toolbarButton, flexSpace], animated: true)
         
         if !audioMgr.isAudioPlaying {
             // show fetching audio message for a few seconds while discovery finishes
@@ -97,7 +109,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CELL_CHANNEL, for: indexPath) as! ChannelCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellChannel, for: indexPath) as! ChannelCollectionViewCell
         
         cell.channelText.font = UIFont(name: APP_PRIMARY_FONT_NAME, size: 14)
         cell.channelText.textColor = APP_COLOR_BLUE
@@ -144,9 +156,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     // MARK: - Notifications
     //====================*/
     
-    /**
-     Sets up all the notification handlers
-     */
+    
+    /// Sets up all the notification handlers
     func initNotifications() {
         let notificationsToObserve = [
             NSNotification.Name.channelsLoaded,
@@ -161,11 +172,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    /**
-     Handlers for all the notifications.
-     
-     @param notification - NSNotification to be processed
-     */
+    /// Handlers for all the notifications.
+    ///
+    /// - Parameter notification: Notification to be processed
     @objc func handleNotifications(_ notification : Notification) {
         switch notification.name {
             
@@ -189,16 +198,17 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                         self.channelArray = cnlList
                         
                         DLog("Recieved list: \(cnlList) with audio mode:\(audioMode)")
-                        labelCurrentName.text = channelArray[0].name
                         collectionView.reloadData() // load UI channel grid first time
                         
-                        let startingChannel = 0
-                        audioMgr.startAudio(on: UInt(startingChannel))
-                        afterDelay(0.5) {
-                            // make the selection of grid view item happen through UI methods
-                            self.setUIChannel(startingChannel)
+                        if channelArray.count > startingChannel {
+                            labelCurrentName.text = channelArray[startingChannel].name
+                            audioMgr.startAudio(on: UInt(startingChannel))
+                            afterDelay(0.5) {
+                                // make the selection of grid view item happen through UI methods
+                                self.setUIChannel(self.startingChannel)
+                            }
+                            updateNowPlaying()
                         }
-                        updateNowPlaying()
                     } else {
                         // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
                         showNotConnectedMessage()
@@ -296,20 +306,42 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     // MARK: - IBActions
     //====================*/
     
-    /**
-     Calls setVolume and sets the volume
-     */
+    
+    /// Calls setVolume and sets the volume
+    ///
+    /// - Parameter sender:
     @IBAction func volumeChanged(_ sender : AnyObject?) {
         setVolume(volumeSlider.value)
+    }
+    
+    
+    /// Called when play/pause is tapped
+    ///
+    /// - Parameter sender:
+    @IBAction func playPauseTapped(_ sender: AnyObject?) {
+        if isPlaying {
+            toolbarButton.image = UIImage(named: "ic_play")
+            navigationController?.toolbar.backgroundColor = UIColor(hex: K_APP_COLOR_GREEN)
+            runInBackground { [unowned self] in
+                self.audioMgr.stopAudio()
+            }
+            isPlaying = false
+        } else {
+            toolbarButton.image = UIImage(named: "ic_pause")
+            navigationController?.toolbar.backgroundColor = APP_COLOR_ORANGE
+            runInBackground { [unowned self] in
+                self.audioMgr.startAudio()
+            }
+            isPlaying = true
+        }
     }
     
     /*=====================
     // MARK: - INSTANCE METHODS
     //====================*/
     
-    /**
-     Updates the lock-screen and MPNowPlayingInfoCenter
-     */
+    
+    /// Updates the lock-screen and MPNowPlayingInfoCenter
     func updateNowPlaying() {
         let productName = Bundle.main.infoDictionary?["CFBundleDisplayName"] ?? APP_NAME
         
@@ -336,9 +368,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    /**
-     Displays the not connected message
-     */
+    
+    /// Displays the not connected message
     func showNotConnectedMessage() {
         app.hideHUD()
         labelCurrentName.text = CHANNELS_NOT_LOADED
@@ -346,9 +377,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         labelError.text = STR_NO_CONNECTION
     }
     
-    /**
-     Sets the volume on the AudioManager
-     */
+    
+    /// Sets the volume on the AudioManager
+    ///
+    /// - Parameter volume:
     func setVolume(_ volume : Float) {
         DLog("SYSTEM VOLUME CHANGING TO: \(volume)")
         audioMgr.volume = volume
@@ -356,9 +388,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         prefs.synchronize()
     }
     
-    /**
-     Sets the channel by changing the UI
-     */
+    
+    /// Sets the channel by changing the UI
+    ///
+    /// - Parameter channelIdx:
     func setUIChannel(_ channelIdx : Int) {
         if channelIdx < self.channelArray.count {
             let indexPath = IndexPath(row: channelIdx, section: 0)
@@ -367,9 +400,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
-    /**
-     Sets the current channel, by determining the actual APB channel number
-     */
+    
+    /// Sets the current channel, by determining the actual APB channel number
+    ///
+    /// - Parameter channel:
     func setChannel(_ channel : Channel) {
         let apbIdx = Int(channel.apbIndex)
         if audioMgr.allApbs.count > apbIdx,
@@ -383,9 +417,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         updateNowPlaying()
     }
     
-    /**
-     Sets AudioManager to the specified channel
-     */
+    
+    /// Sets AudioManager to the specified channel
+    ///
+    /// - Parameter channel:
     func setAudioManagerChannel(_ channel : Int) {
         let curCnl = UInt(channel)
         if audioMgr.hasChannel(curCnl) {
@@ -394,9 +429,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
-    /**
-     @return Returns the name for the given channel number
-     */
+    
+    /// Returns the name for the given channel number
+    ///
+    /// - Parameter channel:
+    /// - Returns: Returns the name for the given channel number
     func getChannelName(_ channel : Int) -> String {
         var cnlName = String(format: "%d", channel)
         
