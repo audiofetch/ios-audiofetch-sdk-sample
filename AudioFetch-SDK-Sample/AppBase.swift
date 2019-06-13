@@ -9,12 +9,12 @@ import UIKit
 
 class AppBase: UIApplication {
     lazy var notify = NotificationCenter.default
-    
-    override var canBecomeFirstResponder : Bool {
+
+    override var canBecomeFirstResponder: Bool {
         return true
     }
-    
-    
+
+
     /// Sends notification events for remote control use in control center
     ///
     /// - Parameter event: 

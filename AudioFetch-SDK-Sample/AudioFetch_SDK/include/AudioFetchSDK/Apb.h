@@ -6,38 +6,39 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Channel.h"
 
 @interface Apb : NSObject
-@property (strong, nonatomic) NSString *ipAddress;
-@property (strong, nonatomic) NSString *serial;
-@property (strong, nonatomic) NSString *json;
+@property (strong, nonatomic) NSString* _Nonnull ipAddress;
+@property (strong, nonatomic) NSString* _Nonnull serial;
+@property (strong, nonatomic) NSString* _Nonnull json;
 
 @property (readwrite) NSUInteger apbIndex;
 @property (nonatomic) NSUInteger baseChannel;
 @property (nonatomic) NSUInteger audioMode;
 @property (nonatomic) BOOL initial;
-@property (readonly) NSDictionary *jsonDict;
-@property (readonly) NSDictionary *channels;
+@property (readonly) NSDictionary* _Nullable jsonDict;
+@property (readonly) NSDictionary<NSString*, NSString*>* _Nullable channels;
 @property (readonly) NSRange channelRange;
-@property (readonly) NSArray *channelList;
+@property (readonly) NSArray<Channel*>* _Nonnull channelList;
 
 
-+ (instancetype)abpWithHost:(NSString *)ip
++ (instancetype _Nonnull)abpWithHost:(NSString * _Nonnull)ip
                 baseChannel:(NSUInteger)channel
                   audioMode:(NSUInteger)mode
                   isInitial:(BOOL)initial
-               serialNumber:(NSString *)serial
-                       json:(NSString *)json
+               serialNumber:(NSString * _Nonnull)serial
+                       json:(NSString * _Nonnull)json
                    apbIndex:(NSUInteger) index;
 
-- (instancetype)initWithHost:(NSString *)ip
+- (instancetype _Nonnull)initWithHost:(NSString * _Nonnull)ip
                  baseChannel:(NSUInteger)channel
                    audioMode:(NSUInteger)mode
                    isInitial:(BOOL)initial
-                serialNumber:(NSString *)serial
-                        json:(NSString *)json
+                serialNumber:(NSString * _Nonnull)serial
+                        json:(NSString * _Nonnull)json
                     apbIndex:(NSUInteger) index;
 
 - (BOOL)containsChannel:(NSUInteger) channel;
-- (NSString *)nameForChannel:(NSUInteger) channel;
+- (NSString* _Nullable)nameForChannel:(NSUInteger) channel;
 @end

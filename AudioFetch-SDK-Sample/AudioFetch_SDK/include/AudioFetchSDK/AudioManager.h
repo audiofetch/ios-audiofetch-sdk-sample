@@ -11,6 +11,8 @@
 
 @interface AudioManager : NSObject <AVAudioPlayerDelegate>
 
+typedef void(^RestartDiscoveryCompletionHandler)(BOOL restarted);
+
 /*====================================
 // MARK: SINGLETON
 //===================================*/
@@ -21,11 +23,19 @@
 
  @return AudioManager
  */
-+ (instancetype) sharedInstance;
+@property (class, readonly) AudioManager* _Nonnull shared;
 
 /*====================================
 // MARK: PUBLIC METHODS
 //===================================*/
+
+/**
+ Stops the audio, and restarts discovery.
+ If discovery is successful, audio restarts
+ 
+ @param handler - Completion handler receives YES if restarted, NO otherwise
+ */
+- (void)restartDiscovery:(RestartDiscoveryCompletionHandler _Nonnull) handler;
 
 /**
  Start the audio
@@ -126,12 +136,12 @@
 /**
  The apb that is currently being accessed or nil
  */
-@property(readonly) Apb *currentApb;
+@property(readonly) Apb* _Nullable currentApb;
 
 /**
  The list of discovered Apbs or nil
  */
-@property(readonly) NSArray *allApbs;
+@property(readonly) NSArray<Apb*>* _Nonnull allApbs;
 
 /**
  Should be 75 for TV audio, 150 for music

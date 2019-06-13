@@ -9,7 +9,7 @@ import Foundation
 
 // prefs
 let PREF_LAST_VOLUME = "lastVolume"
-let PREF_LAST_VOLUME_DEFAULT:Float = 0.65
+let PREF_LAST_VOLUME_DEFAULT: Float = 0.65
 
 // colors
 let APP_COLOR_BLACK = UIColor(hex: 0x333333)
@@ -40,11 +40,12 @@ let STR_CANCEL = NSLocalizedString("Cancel", comment: "Cancel")
 let STR_OK = NSLocalizedString("OK", comment: "OK")
 let STR_NAME = NSLocalizedString("Name", comment: "Name")
 let STR_CHANNEL_NUM = NSLocalizedString("Channel %@", comment: "Channel %@")
-let STR_FETCHING_AUDIO = NSLocalizedString("Fetching Audio...", comment:"Fetching Audio...")
+let STR_FETCHING_AUDIO = NSLocalizedString("Fetching Audio...", comment: "Fetching Audio...")
 let STR_NO_CONNECTION = NSLocalizedString("A connection was not found.  Please ensure that you are connected to an AudioFetch enabled WiFi network and restart the app.", comment: "A connection was not found.  Please ensure that you are connected to an AudioFetch enabled WiFi network and restart the app.")
 
 let APP_NAME = NSLocalizedString("AudioFetch SDK Sample", comment: "AudioFetch SDK Sample")
 let LOADING_CHANNELS = NSLocalizedString("Loading Channels...", comment: "Loading Channels...")
+let REFRESHING_CHANNELS = NSLocalizedString("Refreshing Channels...", comment: "Refreshing Channels...")
 let CHANNELS_NOT_LOADED = NSLocalizedString("No channels found!", comment: "No channels found!")
 
 let APP_WIFI_MSG_BRANDED_SHORT = NSLocalizedString("Connect to AudioFetch WiFi...", comment: "Connect to AudioFetch WiFi...")

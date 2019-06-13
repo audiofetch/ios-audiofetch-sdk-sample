@@ -9,9 +9,9 @@
 import UIKit
 
 class ChannelCollectionViewCell: UICollectionViewCell {
-    
+
     @IBOutlet weak var channelLabel: UILabel!
     @IBOutlet weak var channelText: UILabel!
     @IBOutlet weak var iconView: UIView!
-    
+
 }

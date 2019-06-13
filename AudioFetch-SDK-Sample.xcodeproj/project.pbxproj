@@ -17,10 +17,10 @@
 		2738E4CB1D0F76D300B684B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2738E4CA1D0F76D300B684B4 /* Constants.swift */; };
 		275432541D21C7BD00728081 /* AppBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275432531D21C7BD00728081 /* AppBase.swift */; };
 		275432591D21C92400728081 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275432581D21C92400728081 /* main.swift */; };
-		27DBB9BE1D21E4BC0038CA4A /* EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBB9BD1D21E4BC0038CA4A /* EXT.swift */; };
+		27DBB9BE1D21E4BC0038CA4A /* UIColor+Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBB9BD1D21E4BC0038CA4A /* UIColor+Globals.swift */; };
 		27FA630E1D107FFE00AA2180 /* ChannelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA630D1D107FFE00AA2180 /* ChannelCollectionViewCell.swift */; };
-		31229C8F1D8DDF2C0065858F /* libAudioFetchSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31229C8E1D8DDF2C0065858F /* libAudioFetchSDK.a */; };
 		31BA5EB11D79FDE3001E9AD9 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 31BA5EB01D79FDE3001E9AD9 /* Settings.bundle */; };
+		4C1FF4C022AB52DF0042BDBE /* libAudioFetchSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1FF4BF22AB52DF0042BDBE /* libAudioFetchSDK.a */; };
 		E477AC6F35CED917EC05EB4E /* Pods_AudioFetch_SDK_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B726C8008934305372FFA01 /* Pods_AudioFetch_SDK_Sample.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,15 +38,15 @@
 		2738E4CA1D0F76D300B684B4 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		275432531D21C7BD00728081 /* AppBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppBase.swift; sourceTree = "<group>"; };
 		275432581D21C92400728081 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		27DBB9BD1D21E4BC0038CA4A /* EXT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EXT.swift; sourceTree = "<group>"; };
+		27DBB9BD1D21E4BC0038CA4A /* UIColor+Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Globals.swift"; sourceTree = "<group>"; };
 		27FA630D1D107FFE00AA2180 /* ChannelCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCollectionViewCell.swift; sourceTree = "<group>"; };
 		31229C8A1D8DD43E0065858F /* Apb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Apb.h; sourceTree = "<group>"; };
 		31229C8B1D8DD43E0065858F /* AudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioManager.h; sourceTree = "<group>"; };
 		31229C8C1D8DD43E0065858F /* Channel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		31229C8D1D8DD43E0065858F /* Notifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
-		31229C8E1D8DDF2C0065858F /* libAudioFetchSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAudioFetchSDK.a; sourceTree = "<group>"; };
 		31BA5EB01D79FDE3001E9AD9 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		3A568C2CB22F8BCA093B29CD /* Pods-AudioFetch-SDK-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioFetch-SDK-Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-AudioFetch-SDK-Sample/Pods-AudioFetch-SDK-Sample.release.xcconfig"; sourceTree = "<group>"; };
+		4C1FF4BF22AB52DF0042BDBE /* libAudioFetchSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAudioFetchSDK.a; sourceTree = "<group>"; };
 		717A0E8B7520ED42E75917A7 /* Pods-AudioFetch-SDK-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioFetch-SDK-Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AudioFetch-SDK-Sample/Pods-AudioFetch-SDK-Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		7B726C8008934305372FFA01 /* Pods_AudioFetch_SDK_Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AudioFetch_SDK_Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -58,7 +58,7 @@
 			files = (
 				2738E4C71D0F734900B684B4 /* libresolv.tbd in Frameworks */,
 				2738E4901D0F6FAA00B684B4 /* MediaPlayer.framework in Frameworks */,
-				31229C8F1D8DDF2C0065858F /* libAudioFetchSDK.a in Frameworks */,
+				4C1FF4C022AB52DF0042BDBE /* libAudioFetchSDK.a in Frameworks */,
 				E477AC6F35CED917EC05EB4E /* Pods_AudioFetch_SDK_Sample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,7 +118,6 @@
 		2738E5041D0F906000B684B4 /* AudioFetch_SDK */ = {
 			isa = PBXGroup;
 			children = (
-				31229C8E1D8DDF2C0065858F /* libAudioFetchSDK.a */,
 				2738E5051D0F906000B684B4 /* include */,
 			);
 			path = AudioFetch_SDK;
@@ -127,6 +126,7 @@
 		2738E5051D0F906000B684B4 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				4C1FF4BF22AB52DF0042BDBE /* libAudioFetchSDK.a */,
 				2738E5061D0F906000B684B4 /* AudioFetchSDK */,
 			);
 			path = include;
@@ -159,7 +159,7 @@
 				2738E42D1D0F678100B684B4 /* AppDelegate.swift */,
 				275432581D21C92400728081 /* main.swift */,
 				275432531D21C7BD00728081 /* AppBase.swift */,
-				27DBB9BD1D21E4BC0038CA4A /* EXT.swift */,
+				27DBB9BD1D21E4BC0038CA4A /* UIColor+Globals.swift */,
 				2738E4CA1D0F76D300B684B4 /* Constants.swift */,
 			);
 			name = App;
@@ -204,6 +204,7 @@
 				2738E4271D0F678100B684B4 /* Frameworks */,
 				311C082A1D67CC03001C84A0 /* ShellScript */,
 				2738E4281D0F678100B684B4 /* Resources */,
+				4C1FF4BC22AB4F200042BDBE /* ShellScript */,
 				A92B535EB9CF6036C634C9A1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -222,19 +223,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Audio Fetch";
 				TargetAttributes = {
 					2738E4291D0F678100B684B4 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = T2JV8CBKG9;
-						LastSwiftMigration = 0930;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = 2738E4251D0F678100B684B4 /* Build configuration list for PBXProject "AudioFetch-SDK-Sample" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -294,7 +295,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n# Auto Increment Version Script\nbuildPlist=$INFOPLIST_FILE\necho $buildPlist\nCFSVString=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$buildPlist\")\nCFBundleVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$buildPlist\")\nBUILD_NR=${CFBundleVersion##*.}\n    #BUILD_NR=$(($BUILD_NR + 1))\n    #echo $BUILD_NR\n    CFBundleVersion=$CFSVString\".\"$BUILD_NR\n    #echo $CFBundleVersion\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $CFBundleVersion\" \"$buildPlist\"\n    /usr/libexec/PlistBuddy \"$SRCROOT/AudioFetch-SDK-Sample/Settings.bundle/Root.plist\" -c \"Set PreferenceSpecifiers:0:DefaultValue $CFBundleVersion\"";
+			shellScript = "#!/bin/bash\n# Auto Increment Version Script\nbuildPlist=$INFOPLIST_FILE\necho $buildPlist\nCFSVString=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"$buildPlist\")\nCFBundleVersion=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$buildPlist\")\nBUILD_NR=${CFBundleVersion##*.}\n    #BUILD_NR=$(($BUILD_NR + 1))\n    #echo $BUILD_NR\n    CFBundleVersion=$CFSVString\".\"$BUILD_NR\n    #echo $CFBundleVersion\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $CFBundleVersion\" \"$buildPlist\"\n    /usr/libexec/PlistBuddy \"$SRCROOT/AudioFetch-SDK-Sample/Settings.bundle/Root.plist\" -c \"Set PreferenceSpecifiers:0:DefaultValue $CFBundleVersion\"\n";
+		};
+		4C1FF4BC22AB4F200042BDBE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint autocorrect\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		A92B535EB9CF6036C634C9A1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -327,7 +345,7 @@
 				275432591D21C92400728081 /* main.swift in Sources */,
 				275432541D21C7BD00728081 /* AppBase.swift in Sources */,
 				2738E42E1D0F678100B684B4 /* AppDelegate.swift in Sources */,
-				27DBB9BE1D21E4BC0038CA4A /* EXT.swift in Sources */,
+				27DBB9BE1D21E4BC0038CA4A /* UIColor+Globals.swift in Sources */,
 				2738E4CB1D0F76D300B684B4 /* Constants.swift in Sources */,
 				27FA630E1D107FFE00AA2180 /* ChannelCollectionViewCell.swift in Sources */,
 			);
@@ -359,6 +377,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -414,6 +433,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -474,6 +494,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK/include/AudioFetchSDK",
+					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK/include",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -485,8 +506,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AudioFetch-SDK-Sample/AudioFetch-SDK-Sample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -506,6 +526,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK",
 					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK/include/AudioFetchSDK",
+					"$(PROJECT_DIR)/AudioFetch-SDK-Sample/AudioFetch_SDK/include",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -516,8 +537,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.audiofetch.AudioFetch-SDK-Sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AudioFetch-SDK-Sample/AudioFetch-SDK-Sample-Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
