@@ -30,12 +30,15 @@ typedef void(^RestartDiscoveryCompletionHandler)(BOOL restarted);
 //===================================*/
 
 /**
- Stops the audio, and restarts discovery.
- If discovery is successful, audio restarts
+ Stops the audio, and resets and restarts discovery.
+ 
+ @param startAudio - If NO, then audio stops, and is reset, discovery is run, and discovery results are returned, but audio will not automatically start.
+ If YES, then audio stops, and is reset, discovery is run and audio will be restarted automatically.
  
  @param handler - Completion handler receives YES if restarted, NO otherwise
  */
-- (void)restartDiscovery:(RestartDiscoveryCompletionHandler _Nonnull) handler;
+- (void)resetDiscovery:(BOOL) restartAudio
+        withCompletion: (RestartDiscoveryCompletionHandler _Nonnull) handler;
 
 /**
  Start the audio
@@ -107,6 +110,12 @@ typedef void(^RestartDiscoveryCompletionHandler)(BOOL restarted);
  Whether audio is playing, or not
  */
 @property (readonly) BOOL isAudioPlaying;
+
+/**
+ Indicates either discovery and/or audio service is started.
+ This differs from isAudioPlaying, which monitors actual stream timeouts, this just tells us that the service is started.
+ */
+@property (readonly) BOOL isAudioServiceStarted;
 
 /**
  Whether demo mode is enabled, or not

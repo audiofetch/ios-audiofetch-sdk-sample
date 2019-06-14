@@ -23,7 +23,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     fileprivate let cellChannel = "ChannelCell" // also enter this string as the cell identifier in the storyboard
 
     /// Set this to the channel, on which, you want the player to start playing audio.
-    fileprivate let startingChannel = 1
+    fileprivate let startingChannel = 0
 
     /*===========================
     // MARK: - DATA MEMBERS
@@ -44,7 +44,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         discoFailureCallbackCount = 0
 
     var hasShownWifiSettings = false,
-        isPlaying = true
+        isPlaying = false
 
     static var isWifiConnected = true
 
@@ -69,10 +69,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         navigationController?.navigationBar.isTranslucent = false
 
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbarButton = UIBarButtonItem(image: UIImage(named: "ic_pause"), style: .plain, target: self, action: #selector(playPauseTapped(_:)))
+        let playPauseImage = isPlaying ? UIImage(named: "ic_pause") : UIImage(named: "ic_play")
+        toolbarButton = UIBarButtonItem(image: playPauseImage, style: .plain, target: self, action: #selector(playPauseTapped(_:)))
         toolbarButton.tintColor = UIColor.white
         navigationController?.isToolbarHidden = false
-        navigationController?.toolbar.backgroundColor = APP_COLOR_ORANGE
+        navigationController?.toolbar.backgroundColor = isPlaying ? APP_COLOR_ORANGE : APP_COLOR_GREEN
         setToolbarItems([flexSpace, toolbarButton, flexSpace], animated: true)
 
         showDiscoveryHUD()
@@ -199,12 +200,18 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
 
                         if channelArray.count > startingChannel {
                             labelCurrentName.text = channelArray[startingChannel].name
-                            audioMgr.startAudio(on: UInt(startingChannel))
                             afterDelay(0.5) {
                                 // make the selection of grid view item happen through UI methods
                                 self.setUIChannel(self.startingChannel)
                             }
-                            updateNowPlaying()
+                            if isPlaying {
+                                audioMgr.startAudio(on: UInt(startingChannel))
+                                updateNowPlaying()
+                            } else if audioMgr.isAudioServiceStarted {
+                                // since were not in playing mode, but the audio service is started
+                                // we'll go ahead and stop it anyhow, by calling stopAudio
+                                audioMgr.stopAudio()
+                            }
                         }
                     } else {
                         // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
@@ -274,13 +281,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 type(of: self).isWifiConnected = (ob as? Bool) ?? false
 
                 if type(of: self).isWifiConnected {
-                    if !audioMgr.isAudioPlaying {
+                    if !audioMgr.isAudioPlaying && isPlaying {
                         audioMgr.startAudio()
                     }
                 } else {
                     app.hideHUD()
                     if audioMgr.isAudioPlaying {
-                        audioMgr.stopAudio()
+                        isPlaying = true
+                        playPauseTapped(toolbarButton)
                     }
 
                     let okAction = UIAlertAction(title: STR_OK, style: .default, handler: { (action) in
@@ -307,14 +315,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         channelArray = []
         collectionView.reloadData()
         labelCurrentName.text = REFRESHING_CHANNELS
+        toolbarButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
             self.showDiscoveryHUD(REFRESHING_CHANNELS)
         }
         runInBackground { [unowned self] in
-            self.audioMgr.restartDiscovery { (restarted) in
+            self.audioMgr.resetDiscovery(self.isPlaying) { (restarted) in
                 if !restarted {
                     DLog("Failed to restart discovery!")
                 }
+                self.toolbarButton.isEnabled = true
             }
         }
     }
@@ -331,9 +341,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     ///
     /// - Parameter sender:
     @IBAction func playPauseTapped(_ sender: AnyObject?) {
+        toolbarButton.isEnabled = false
         if isPlaying {
             toolbarButton.image = UIImage(named: "ic_play")
-            navigationController?.toolbar.backgroundColor = UIColor(hex: K_APP_COLOR_GREEN)
+            navigationController?.toolbar.backgroundColor = APP_COLOR_GREEN
             runInBackground { [unowned self] in
                 self.audioMgr.stopAudio()
             }
@@ -345,6 +356,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 self.audioMgr.startAudio()
             }
             isPlaying = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            // prevent toggling too fast or SDK will fail to get audio session
+            self?.toolbarButton.isEnabled = true
         }
     }
 
