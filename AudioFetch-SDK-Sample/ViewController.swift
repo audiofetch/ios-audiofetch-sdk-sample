@@ -44,7 +44,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         discoFailureCallbackCount = 0
 
     var hasShownWifiSettings = false,
-        isPlaying = false
+        isPlaying = true
 
     static var isWifiConnected = true
 
@@ -315,7 +315,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         channelArray = []
         collectionView.reloadData()
         labelCurrentName.text = REFRESHING_CHANNELS
-        toolbarButton.isEnabled = false
+        toolbarButton.isEnabled = false // pause for taps on play / pause long enough to allow time to get Audio session from iOS
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
             self.showDiscoveryHUD(REFRESHING_CHANNELS)
         }
@@ -324,7 +324,9 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 if !restarted {
                     DLog("Failed to restart discovery!")
                 }
-                self.toolbarButton.isEnabled = true
+                DispatchQueue.main.async { [unowned self] in
+                    self.toolbarButton.isEnabled = true // re-enable play / pause
+                }
             }
         }
     }

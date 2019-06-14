@@ -11,7 +11,7 @@
 
 @interface AudioManager : NSObject <AVAudioPlayerDelegate>
 
-typedef void(^RestartDiscoveryCompletionHandler)(BOOL restarted);
+typedef void(^ResetDiscoveryCompletionHandler)(BOOL restarted);
 
 /*====================================
 // MARK: SINGLETON
@@ -38,7 +38,7 @@ typedef void(^RestartDiscoveryCompletionHandler)(BOOL restarted);
  @param handler - Completion handler receives YES if restarted, NO otherwise
  */
 - (void)resetDiscovery:(BOOL) restartAudio
-        withCompletion: (RestartDiscoveryCompletionHandler _Nonnull) handler;
+        withCompletion: (ResetDiscoveryCompletionHandler _Nonnull) handler;
 
 /**
  Start the audio
