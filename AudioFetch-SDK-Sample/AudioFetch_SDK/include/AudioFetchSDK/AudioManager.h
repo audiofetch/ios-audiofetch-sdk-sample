@@ -32,12 +32,12 @@ typedef void(^ResetDiscoveryCompletionHandler)(BOOL restarted);
 /**
  Stops the audio, and resets and restarts discovery.
  
- @param startAudio - If NO, then audio stops, and is reset, discovery is run, and discovery results are returned, but audio will not automatically start.
+ @param startAudio - If NO, then only discovery is run, and discovery results are returned, but audio will not automatically start.
  If YES, then audio stops, and is reset, discovery is run and audio will be restarted automatically.
  
  @param handler - Completion handler receives YES if restarted, NO otherwise
  */
-- (void)resetDiscovery:(BOOL) restartAudio
+- (void)resetDiscovery:(BOOL) startAudio
         withCompletion: (ResetDiscoveryCompletionHandler _Nonnull) handler;
 
 /**
