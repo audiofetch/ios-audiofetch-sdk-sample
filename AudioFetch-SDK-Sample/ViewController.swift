@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var volumeSlider: UISlider!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -40,11 +40,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var channelArray = [Channel]()
     var selectedChannel: Channel?
     var currentChannelIndex = 0,
-        discoSuccessCallbackCount = 0,
+        channelsLoadedCallbackCount = 0,
         discoFailureCallbackCount = 0
 
     var hasShownWifiSettings = false,
-        isPlaying = true
+        isPlaying = false
 
     static var isWifiConnected = true
 
@@ -92,224 +92,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         notify.removeObserver(self)
     }
 
-    /*=====================
-     // MARK: - UICollectionViewDataSource
-     //====================*/
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return channelArray.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellChannel, for: indexPath) as! ChannelCollectionViewCell
-
-        cell.channelText.font = UIFont(name: APP_PRIMARY_FONT_NAME, size: 14)
-        cell.channelText.textColor = APP_COLOR_BLUE
-        cell.channelText.text = getChannelName(indexPath.row)
-
-
-        cell.channelLabel.font = UIFont(name: APP_BOLD_FONT_NAME, size: 14)
-        cell.channelLabel.textColor = APP_COLOR_BLUE
-        cell.backgroundColor = UIColor.clear
-        cell.iconView.backgroundColor = APP_COLOR_SILVER
-        cell.iconView.layer.cornerRadius = 6.0
-        cell.iconView.layer.borderWidth = 1.0
-        cell.iconView.layer.masksToBounds = true
-
-        cell.iconView.layer.borderColor = UIColor.gray.cgColor
-        if let selectedItem = collectionView.indexPathsForSelectedItems,
-            selectedItem.contains(indexPath) {
-            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
-        }
-        return cell
-    }
-
-    /*=====================
-    // MARK: - UICollectionViewDelegate
-    //====================*/
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        for cell in collectionView.visibleCells {
-            if let iconCell = cell as? ChannelCollectionViewCell {
-                iconCell.iconView.layer.borderColor = UIColor.gray.cgColor
-            }
-        }
-        if let cell = collectionView.cellForItem(at: indexPath) as? ChannelCollectionViewCell {
-            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
-        }
-        DLog("You selected cell #\(indexPath.item)!")
-        currentChannelIndex = indexPath.row
-        labelCurrentName.text = getChannelName(currentChannelIndex)
-        setChannel(channelArray[currentChannelIndex])
-        updateNowPlaying()
-    }
-
-    /*=====================
-    // MARK: - Notifications
-    //====================*/
-
-
-    /// Sets up all the notification handlers
-    func initNotifications() {
-        let notificationsToObserve = [
-            NSNotification.Name.channelsLoaded,
-            NSNotification.Name.deviceDiscoveryFailed,
-            NSNotification.Name.forwardPressed,
-            NSNotification.Name.backwardPressed,
-            NSNotification.Name.networkConnection,
-            NSNotification.Name.hardwareButtonVolume
-        ]
-        for notification in notificationsToObserve {
-            notify.addObserver(self, selector: #selector(ViewController.handleNotifications(_:)), name: notification, object: nil)
-        }
-    }
-
-    /// Handlers for all the notifications.
-    ///
-    /// - Parameter notification: Notification to be processed
-    @objc func handleNotifications(_ notification: Notification) {
-        switch notification.name {
-
-        //==================================================
-        // MAIN DISCOVERY FINISHED: userInfo contains all the channels for UI to display
-        case NSNotification.Name.channelsLoaded where nil != notification.userInfo: // triggered in AudioManager after discovery
-            afterDelay(0.7) {
-                if 0 == self.discoSuccessCallbackCount { // only trigger on first failure callback
-                    self.showNotConnectedMessage()
-                }
-            }
-            if let dict = notification.userInfo as? [String: AnyObject],
-                nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
-
-                if let cnlList = dict[channelsLoadedNotificationChannelsKey] as? [Channel], // channel list
-                    let audioMode = dict[channelsLoadedNotificationAudioModeKey] as? UInt { // 1 = mono, 2 = stereo
-
-                    if !cnlList.isEmpty { // channels received from APBs
-                        labelError.isHidden = true
-                        app.hideHUD()
-                        self.channelArray = cnlList
-
-                        DLog("Recieved list: \(cnlList) with audio mode:\(audioMode)")
-                        collectionView.reloadData() // load UI channel grid first time
-
-                        if channelArray.count > startingChannel {
-                            labelCurrentName.text = channelArray[startingChannel].name
-                            afterDelay(0.5) {
-                                // make the selection of grid view item happen through UI methods
-                                self.setUIChannel(self.startingChannel)
-                            }
-                            if isPlaying {
-                                audioMgr.startAudio(on: UInt(startingChannel))
-                                updateNowPlaying()
-                            } else if audioMgr.isAudioServiceStarted {
-                                // since were not in playing mode, but the audio service is started
-                                // we'll go ahead and stop it anyhow, by calling stopAudio
-                                audioMgr.stopAudio()
-                            }
-                        }
-                    } else {
-                        // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
-                        showNotConnectedMessage()
-                    }
-                    self.discoSuccessCallbackCount += 1 // prevent not connected message from showing
-
-                } else { // channelsLoadedNotificationChannelsKey == NSNull if no channels
-                    // TODO: may want to implement 0..15 channel grid since this indicates old firmware, as an APB was discovered, just no channels
-                    fallthrough // fallthrough to deviceDiscoveryFailedNotification
-                }
-            }
-        //==================================================
-        // DISCOVERY FAILED
-        case NSNotification.Name.deviceDiscoveryFailed:
-            if 0 == discoFailureCallbackCount {
-                // load a default set of channels
-                showNotConnectedMessage()
-            }
-            self.discoFailureCallbackCount += 1
-
-        //==================================================
-        // hardware volume button notification, object contains volume as float between 0 and 1
-        case NSNotification.Name.hardwareButtonVolume where nil != notification.object:
-            if let obj = notification.object,
-                let volume = obj as? Float {
-                volumeSlider.value = volume
-                prefs.set(volumeSlider.value, forKey: PREF_LAST_VOLUME)
-                prefs.synchronize()
-            }
-
-        //==================================================
-        // lock-screen media controls notifications
-        case NSNotification.Name.forwardPressed:
-            var idx = -1
-            if self.channelArray.count > (currentChannelIndex + 1) {
-                idx = currentChannelIndex + 1
-            } else if !self.channelArray.isEmpty {
-                idx = 0
-            }
-            if idx >= 0 {
-                if idx < self.channelArray.count {
-                    setUIChannel(idx)
-                    updateNowPlaying()
-                }
-            }
-
-        case NSNotification.Name.backwardPressed:
-            var idx = -1
-            if (currentChannelIndex - 1) >= 0 {
-                idx = currentChannelIndex - 1
-            } else {
-                idx = self.channelArray.count - 1
-            }
-            if idx >= 0 {
-                if idx < self.channelArray.count {
-                    setUIChannel(idx)
-                    updateNowPlaying()
-                }
-            }
-
-
-        //==================================================
-        // wifi toggled/dropped notification, object contains a Bool
-        case NSNotification.Name.networkConnection where nil != notification.object:
-            if let ob = notification.object {
-                type(of: self).isWifiConnected = (ob as? Bool) ?? false
-
-                if type(of: self).isWifiConnected {
-                    if !audioMgr.isAudioPlaying && isPlaying {
-                        audioMgr.startAudio()
-                    }
-                } else {
-                    app.hideHUD()
-                    if audioMgr.isAudioPlaying {
-                        isPlaying = true
-                        playPauseTapped(toolbarButton)
-                    }
-
-                    let okAction = UIAlertAction(title: STR_OK, style: .default, handler: { (action) in
-                        if !self.hasShownWifiSettings {
-                            if !type(of: self).isWifiConnected {
-                                self.app.showWifiSettings()
-                            }
-                            self.hasShownWifiSettings = true
-                        }
-                    })
-                    app.alert(APP_WIFI_MSG_BRANDED_SHORT, APP_WIFI_MSG_BRANDED, okAction)
-                }
-            }
-        default:
-            DLog("FAILED TO HANDLE NOTIFICATION: \(notification.name)")
-        }
-    }
-
-    /*=====================
     // MARK: - IBActions
-    //====================*/
 
     @IBAction func refreshChannelsTapped(_ sender: UIBarButtonItem) {
         channelArray = []
@@ -365,9 +148,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
 
-    /*=====================
-    // MARK: - INSTANCE METHODS
-    //====================*/
+    // MARK: - Instance Methods
 
     func showDiscoveryHUD(_ title: String = STR_FETCHING_AUDIO, _ hideAfter: TimeInterval = 5) {
         if !audioMgr.isAudioPlaying {
@@ -486,5 +267,216 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             }
         }
         return cnlName
+    }
+}
+
+// MARK: - Notifications
+
+extension ViewController {
+    /// Sets up all the notification handlers
+    func initNotifications() {
+        let notificationsToObserve = [
+            NSNotification.Name.channelsLoaded,
+            NSNotification.Name.deviceDiscoveryFailed,
+            NSNotification.Name.forwardPressed,
+            NSNotification.Name.backwardPressed,
+            NSNotification.Name.networkConnection,
+            NSNotification.Name.hardwareButtonVolume
+        ]
+        for notification in notificationsToObserve {
+            notify.addObserver(self, selector: #selector(ViewController.handleNotifications(_:)), name: notification, object: nil)
+        }
+    }
+
+    /// Called when the channels loaded notification occurs
+    ///
+    /// - Parameters:
+    ///   - channelList: A possibly empty list of channels
+    ///   - audioMode: The audio mode (1 == mono, 2 == stereo)
+    func handleChannelsLoaded(_ channelList: [Channel], _ audioMode: UInt) {
+        guard !channelList.isEmpty else {
+            afterDelay(0.7) {
+                if 0 == self.channelsLoadedCallbackCount { // only trigger on first failure callback
+                    self.showNotConnectedMessage()
+                    self.channelsLoadedCallbackCount += 1 // prevent not connected message from showing
+                }
+            }
+            return
+        }
+
+        labelError.isHidden = true
+        app.hideHUD()
+        self.channelArray = channelList
+
+        DLog("Recieved list: \(channelList) with audio mode:\(audioMode)")
+        collectionView.reloadData() // load UI channel grid first time
+
+        if channelArray.count > startingChannel {
+            labelCurrentName.text = channelArray[startingChannel].name
+            afterDelay(0.5) {
+                // make the selection of grid view item happen through UI methods
+                self.setUIChannel(self.startingChannel)
+            }
+            if isPlaying {
+                audioMgr.startAudio(on: UInt(startingChannel))
+                updateNowPlaying()
+            } else if audioMgr.isAudioServiceStarted {
+                // since were not in playing mode, but the audio service is started
+                // we'll go ahead and stop it anyhow, by calling stopAudio
+                audioMgr.stopAudio()
+            }
+        }
+    }
+
+    /// Handlers for all the notifications.
+    ///
+    /// - Parameter notification: Notification to be processed
+    @objc func handleNotifications(_ notification: Notification) {
+        switch notification.name {
+
+        // MAIN DISCOVERY FINISHED: userInfo contains all the channels for UI to display
+        case NSNotification.Name.channelsLoaded where nil != notification.userInfo: // triggered in AudioManager after discovery
+            if let dict = notification.userInfo as? [String: AnyObject],
+                nil != dict[channelsLoadedNotificationChannelsKey] && nil != dict[channelsLoadedNotificationAudioModeKey] {
+
+                if let cnlList = dict[channelsLoadedNotificationChannelsKey] as? [Channel], // channel list
+                    let audioMode = dict[channelsLoadedNotificationAudioModeKey] as? UInt { // 1 = mono, 2 = stereo
+                    handleChannelsLoaded(cnlList, audioMode)
+                } else {
+                    fallthrough // fallthrough to deviceDiscoveryFailed notification
+                }
+            }
+
+        // DISCOVERY FAILED
+        case NSNotification.Name.deviceDiscoveryFailed:
+            if 0 == discoFailureCallbackCount {
+                // load a default set of channels
+                showNotConnectedMessage()
+            }
+            self.discoFailureCallbackCount += 1
+
+        // hardware volume button notification, object contains volume as float between 0 and 1
+        case NSNotification.Name.hardwareButtonVolume where nil != notification.object:
+            if let obj = notification.object,
+                let volume = obj as? Float {
+                volumeSlider.value = volume
+                prefs.set(volumeSlider.value, forKey: PREF_LAST_VOLUME)
+                prefs.synchronize()
+            }
+
+        // lock-screen media controls notifications for forward
+        case NSNotification.Name.forwardPressed:
+            var idx = -1
+            if self.channelArray.count > (currentChannelIndex + 1) {
+                idx = currentChannelIndex + 1
+            } else if !self.channelArray.isEmpty {
+                idx = 0
+            }
+            if idx >= 0 {
+                if idx < self.channelArray.count {
+                    setUIChannel(idx)
+                    updateNowPlaying()
+                }
+            }
+
+        // lock-screen media controls notifications for back
+        case NSNotification.Name.backwardPressed:
+            var idx = -1
+            if (currentChannelIndex - 1) >= 0 {
+                idx = currentChannelIndex - 1
+            } else {
+                idx = self.channelArray.count - 1
+            }
+            if idx >= 0 {
+                if idx < self.channelArray.count {
+                    setUIChannel(idx)
+                    updateNowPlaying()
+                }
+            }
+
+        // wifi toggled/dropped notification, object contains a Bool
+        case NSNotification.Name.networkConnection where nil != notification.object:
+            if let ob = notification.object {
+                type(of: self).isWifiConnected = (ob as? Bool) ?? false
+
+                if type(of: self).isWifiConnected {
+                    if !audioMgr.isAudioPlaying && isPlaying {
+                        audioMgr.startAudio()
+                    }
+                } else {
+                    app.hideHUD()
+                    if audioMgr.isAudioPlaying {
+                        isPlaying = true
+                        playPauseTapped(toolbarButton)
+                    }
+
+                    let okAction = UIAlertAction(title: STR_OK, style: .default, handler: { (action) in
+                        if !self.hasShownWifiSettings {
+                            if !type(of: self).isWifiConnected {
+                                self.app.showWifiSettings()
+                            }
+                            self.hasShownWifiSettings = true
+                        }
+                    })
+                    app.alert(APP_WIFI_MSG_BRANDED_SHORT, APP_WIFI_MSG_BRANDED, okAction)
+                }
+            }
+
+        default:
+            DLog("FAILED TO HANDLE NOTIFICATION: \(notification.name)")
+        }
+    }
+}
+
+// MARK: - UICollectionViewDelegate and DataSource
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return channelArray.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable:next force_cast
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellChannel, for: indexPath) as! ChannelCollectionViewCell
+
+        cell.channelText.font = UIFont(name: APP_PRIMARY_FONT_NAME, size: 14)
+        cell.channelText.textColor = APP_COLOR_BLUE
+        cell.channelText.text = getChannelName(indexPath.row)
+
+
+        cell.channelLabel.font = UIFont(name: APP_BOLD_FONT_NAME, size: 14)
+        cell.channelLabel.textColor = APP_COLOR_BLUE
+        cell.backgroundColor = UIColor.clear
+        cell.iconView.backgroundColor = APP_COLOR_SILVER
+        cell.iconView.layer.cornerRadius = 6.0
+        cell.iconView.layer.borderWidth = 1.0
+        cell.iconView.layer.masksToBounds = true
+
+        cell.iconView.layer.borderColor = UIColor.gray.cgColor
+        if let selectedItem = collectionView.indexPathsForSelectedItems,
+            selectedItem.contains(indexPath) {
+            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
+        }
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        for cell in collectionView.visibleCells {
+            if let iconCell = cell as? ChannelCollectionViewCell {
+                iconCell.iconView.layer.borderColor = UIColor.gray.cgColor
+            }
+        }
+        if let cell = collectionView.cellForItem(at: indexPath) as? ChannelCollectionViewCell {
+            cell.iconView.layer.borderColor = APP_COLOR_ORANGE.cgColor
+        }
+        DLog("You selected cell #\(indexPath.item)!")
+        currentChannelIndex = indexPath.row
+        labelCurrentName.text = getChannelName(currentChannelIndex)
+        setChannel(channelArray[currentChannelIndex])
+        updateNowPlaying()
     }
 }

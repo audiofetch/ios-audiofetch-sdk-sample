@@ -20,7 +20,7 @@
 		27DBB9BE1D21E4BC0038CA4A /* UIColor+Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBB9BD1D21E4BC0038CA4A /* UIColor+Globals.swift */; };
 		27FA630E1D107FFE00AA2180 /* ChannelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FA630D1D107FFE00AA2180 /* ChannelCollectionViewCell.swift */; };
 		31BA5EB11D79FDE3001E9AD9 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 31BA5EB01D79FDE3001E9AD9 /* Settings.bundle */; };
-		4C121C0F22B32FCE00A03547 /* libAudioFetchSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C121C0E22B32FCE00A03547 /* libAudioFetchSDK.a */; };
+		4CAC3A1F22C6C83B00D86BF4 /* libAudioFetchSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CAC3A1E22C6C83B00D86BF4 /* libAudioFetchSDK.a */; };
 		E477AC6F35CED917EC05EB4E /* Pods_AudioFetch_SDK_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B726C8008934305372FFA01 /* Pods_AudioFetch_SDK_Sample.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,7 +46,7 @@
 		31229C8D1D8DD43E0065858F /* Notifications.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
 		31BA5EB01D79FDE3001E9AD9 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		3A568C2CB22F8BCA093B29CD /* Pods-AudioFetch-SDK-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioFetch-SDK-Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-AudioFetch-SDK-Sample/Pods-AudioFetch-SDK-Sample.release.xcconfig"; sourceTree = "<group>"; };
-		4C121C0E22B32FCE00A03547 /* libAudioFetchSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAudioFetchSDK.a; sourceTree = "<group>"; };
+		4CAC3A1E22C6C83B00D86BF4 /* libAudioFetchSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAudioFetchSDK.a; sourceTree = "<group>"; };
 		717A0E8B7520ED42E75917A7 /* Pods-AudioFetch-SDK-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AudioFetch-SDK-Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AudioFetch-SDK-Sample/Pods-AudioFetch-SDK-Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		7B726C8008934305372FFA01 /* Pods_AudioFetch_SDK_Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AudioFetch_SDK_Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -58,7 +58,7 @@
 			files = (
 				2738E4C71D0F734900B684B4 /* libresolv.tbd in Frameworks */,
 				2738E4901D0F6FAA00B684B4 /* MediaPlayer.framework in Frameworks */,
-				4C121C0F22B32FCE00A03547 /* libAudioFetchSDK.a in Frameworks */,
+				4CAC3A1F22C6C83B00D86BF4 /* libAudioFetchSDK.a in Frameworks */,
 				E477AC6F35CED917EC05EB4E /* Pods_AudioFetch_SDK_Sample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +118,7 @@
 		2738E5041D0F906000B684B4 /* AudioFetch_SDK */ = {
 			isa = PBXGroup;
 			children = (
+				4CAC3A1E22C6C83B00D86BF4 /* libAudioFetchSDK.a */,
 				2738E5051D0F906000B684B4 /* include */,
 			);
 			path = AudioFetch_SDK;
@@ -126,7 +127,6 @@
 		2738E5051D0F906000B684B4 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				4C121C0E22B32FCE00A03547 /* libAudioFetchSDK.a */,
 				2738E5061D0F906000B684B4 /* AudioFetchSDK */,
 			);
 			path = include;
