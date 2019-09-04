@@ -94,26 +94,6 @@ class ViewController: UIViewController {
 
     // MARK: - IBActions
 
-    @IBAction func refreshChannelsTapped(_ sender: UIBarButtonItem) {
-        channelArray = []
-        collectionView.reloadData()
-        labelCurrentName.text = REFRESHING_CHANNELS
-        toolbarButton.isEnabled = false // pause for taps on play / pause long enough to allow time to get Audio session from iOS
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
-            self.showDiscoveryHUD(REFRESHING_CHANNELS)
-        }
-        runInBackground { [unowned self] in
-            self.audioMgr.resetDiscovery(self.isPlaying) { (restarted) in
-                if !restarted {
-                    DLog("Failed to restart discovery!")
-                }
-                DispatchQueue.main.async { [unowned self] in
-                    self.toolbarButton.isEnabled = true // re-enable play / pause
-                }
-            }
-        }
-    }
-
     /// Calls setVolume and sets the volume
     ///
     /// - Parameter sender:
