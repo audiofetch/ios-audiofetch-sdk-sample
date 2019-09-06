@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     fileprivate lazy var prefs = UserDefaults.standard
 
     // business colleagues
-    fileprivate lazy var audioMgr = AudioManager.shared
+    //fileprivate lazy var audioMgr = AudioManager.shared
 
     var channelArray = [Channel]()
     var selectedChannel: Channel?
@@ -101,37 +101,53 @@ class ViewController: UIViewController {
         setVolume(volumeSlider.value)
     }
 
+    @IBAction func refreshChannelsTapped(_ sender: UIBarButtonItem) {
+        channelArray = []
+        collectionView.reloadData()
+        labelCurrentName.text = REFRESHING_CHANNELS
+        toolbarButton.isEnabled = false // pause for taps on play / pause long enough to allow time to get Audio session from iOS
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
+            self.showDiscoveryHUD(REFRESHING_CHANNELS)
+        }
+        runInBackground { [unowned self] in
+            let result = AudioManager.shared.startDiscovery()
+            print("[REDISCOVER]: resetDiscovery(): restarted = \(result)")
+
+            if !result {
+                DLog("Failed to restart discovery!")
+            }
+            DispatchQueue.main.async { [unowned self] in
+                self.toolbarButton.isEnabled = true // re-enable play / pause
+            }
+        }
+    }
+
 
     /// Called when play/pause is tapped
     ///
     /// - Parameter sender:
     @IBAction func playPauseTapped(_ sender: AnyObject?) {
-        toolbarButton.isEnabled = false
         if isPlaying {
             toolbarButton.image = UIImage(named: "ic_play")
             navigationController?.toolbar.backgroundColor = APP_COLOR_GREEN
             runInBackground { [unowned self] in
-                self.audioMgr.stopAudio()
+                self.app.audioMgr.stopAudio()
             }
             isPlaying = false
         } else {
             toolbarButton.image = UIImage(named: "ic_pause")
             navigationController?.toolbar.backgroundColor = APP_COLOR_ORANGE
             runInBackground { [unowned self] in
-                self.audioMgr.startAudio()
+                self.app.audioMgr.startAudio()
             }
             isPlaying = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            // prevent toggling too fast or SDK will fail to get audio session
-            self?.toolbarButton.isEnabled = true
         }
     }
 
     // MARK: - Instance Methods
 
     func showDiscoveryHUD(_ title: String = STR_FETCHING_AUDIO, _ hideAfter: TimeInterval = 5) {
-        if !audioMgr.isAudioPlaying {
+        if !self.app.audioMgr.isAudioPlaying {
             // show fetching audio message for a few seconds while discovery finishes
             app.showHUD(title)
             afterDelay(hideAfter) {
@@ -146,14 +162,14 @@ class ViewController: UIViewController {
 
         if let icon = UIImage(named: "icon-512") {
             let albumArt = MPMediaItemArtwork(image: icon)
-            let curChannel = audioMgr.currentChannel + 1
+            let curChannel = self.app.audioMgr.currentChannel + 1
             var channelName = String(format: STR_CHANNEL_NUM, NSNumber(value: curChannel))
 
             if let currentCnl = selectedChannel,
                 !currentCnl.name.isEmpty {
                 channelName = String(format: STR_CHANNEL_NUM, currentCnl.name).uppercased()
-            } else if Int(audioMgr.currentChannel) < channelArray.count {
-                let cnl = channelArray[Int(audioMgr.currentChannel)]
+            } else if Int(self.app.audioMgr.currentChannel) < channelArray.count {
+                let cnl = channelArray[Int(self.app.audioMgr.currentChannel)]
                 channelName = String(format: STR_CHANNEL_NUM, cnl.name).uppercased()
             }
 
@@ -161,7 +177,7 @@ class ViewController: UIViewController {
                 MPMediaItemPropertyArtist: productName,
                 MPMediaItemPropertyTitle: channelName,
                 MPMediaItemPropertyArtwork: albumArt,
-                MPNowPlayingInfoPropertyPlaybackRate: (audioMgr.isAudioPlaying) ? 1.0 : 0.0,
+                MPNowPlayingInfoPropertyPlaybackRate: (self.app.audioMgr.isAudioPlaying) ? 1.0 : 0.0,
                 MPNowPlayingInfoPropertyElapsedPlaybackTime: 0
             ]
         }
@@ -182,7 +198,7 @@ class ViewController: UIViewController {
     /// - Parameter volume:
     func setVolume(_ volume: Float) {
         DLog("SYSTEM VOLUME CHANGING TO: \(volume)")
-        audioMgr.volume = volume
+        self.app.audioMgr.volume = volume
         prefs.set(volumeSlider.value, forKey: PREF_LAST_VOLUME)
         prefs.synchronize()
     }
@@ -205,8 +221,8 @@ class ViewController: UIViewController {
     /// - Parameter channel:
     func setChannel(_ channel: Channel) {
         let apbIdx = Int(channel.apbIndex)
-        if audioMgr.allApbs.count > apbIdx {
-            let switchToChannel = Int(audioMgr.allApbs[apbIdx].baseChannel) + Int(channel.channel)
+        if self.app.audioMgr.allApbs.count > apbIdx {
+            let switchToChannel = Int(self.app.audioMgr.allApbs[apbIdx].baseChannel) + Int(channel.channel)
             self.selectedChannel = channel
 
             DLog("SWITCHING TO CHANNEL: \(switchToChannel)")
@@ -221,8 +237,8 @@ class ViewController: UIViewController {
     /// - Parameter channel:
     func setAudioManagerChannel(_ channel: Int) {
         let curCnl = UInt(channel)
-        if audioMgr.hasChannel(curCnl) {
-            audioMgr.currentChannel = curCnl
+        if self.app.audioMgr.hasChannel(curCnl) {
+            self.app.audioMgr.currentChannel = curCnl
         }
     }
 
@@ -292,18 +308,25 @@ extension ViewController {
         collectionView.reloadData() // load UI channel grid first time
 
         if channelArray.count > startingChannel {
-            labelCurrentName.text = channelArray[startingChannel].name
+
+            var channel = startingChannel
+
+            if (channelArray.count > currentChannelIndex) {
+                channel = currentChannelIndex
+            }
+
+            labelCurrentName.text = channelArray[channel].name
             afterDelay(0.5) {
                 // make the selection of grid view item happen through UI methods
-                self.setUIChannel(self.startingChannel)
+                self.setUIChannel(channel)
             }
             if isPlaying {
-                audioMgr.startAudio(on: UInt(startingChannel))
+                self.app.audioMgr.startAudio(on: UInt(channel))
                 updateNowPlaying()
-            } else if audioMgr.isAudioServiceStarted {
+            } else if self.app.audioMgr.isAudioServiceStarted {
                 // since were not in playing mode, but the audio service is started
                 // we'll go ahead and stop it anyhow, by calling stopAudio
-                audioMgr.stopAudio()
+                self.app.audioMgr.stopAudio()
             }
         }
     }
@@ -380,12 +403,12 @@ extension ViewController {
                 type(of: self).isWifiConnected = (ob as? Bool) ?? false
 
                 if type(of: self).isWifiConnected {
-                    if !audioMgr.isAudioPlaying && isPlaying {
-                        audioMgr.startAudio()
+                    if !self.app.audioMgr.isAudioPlaying && isPlaying {
+                        self.app.audioMgr.startAudio()
                     }
                 } else {
                     app.hideHUD()
-                    if audioMgr.isAudioPlaying {
+                    if self.app.audioMgr.isAudioPlaying {
                         isPlaying = true
                         playPauseTapped(toolbarButton)
                     }

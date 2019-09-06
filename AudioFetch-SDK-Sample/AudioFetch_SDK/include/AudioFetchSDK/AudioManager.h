@@ -11,8 +11,6 @@
 
 @interface AudioManager : NSObject <AVAudioPlayerDelegate>
 
-typedef void(^ResetDiscoveryCompletionHandler)(BOOL restarted);
-
 /*====================================
 // MARK: SINGLETON
 //===================================*/
@@ -28,6 +26,29 @@ typedef void(^ResetDiscoveryCompletionHandler)(BOOL restarted);
 /*====================================
 // MARK: PUBLIC METHODS
 //===================================*/
+
+
+/**
+ Starts audio service
+ */
+- (void) startService;
+
+/**
+ Stops audio service
+ */
+- (void) stopService;
+
+/**
+ Starts only discovery service
+ 
+ @return YES if successful, NO otherwise
+ */
+- (BOOL) startDiscovery;
+
+/**
+ Stops discovery service
+ */
+- (void) stopDiscovery;
 
 /**
  Start the audio

@@ -11,6 +11,8 @@ import UIKit
 //@UIApplicationMain // See main.swift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    lazy var audioMgr = AudioManager.shared
+
     static var isHUDShowing = false
     // swiftlint:disable:next implicitly_unwrapped_optional
     static var HUD: MBProgressHUD!
@@ -54,7 +56,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         sharedApplication.beginReceivingRemoteControlEvents()
         registerDefaults()
         initStyles()
+        startService()
         return true
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        stopService()
     }
 
 
@@ -76,6 +83,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 vc.present(alertDlg, animated: true, completion: nil)
             }
         }
+    }
+
+    /// Starts Audio Service
+    ///
+    func startService () {
+        self.audioMgr.startService()
+    }
+
+    /// Stops Audio Service
+    ///
+    func stopService () {
+        self.audioMgr.stopService()
     }
 
     /// Displays a progress HUD (heads-up-display)
