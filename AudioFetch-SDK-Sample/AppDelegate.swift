@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     lazy var audioMgr = AudioManager.shared
-    
+
     static var isHUDShowing = false
     // swiftlint:disable:next implicitly_unwrapped_optional
     static var HUD: MBProgressHUD!
@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         startService()
         return true
     }
-    
+
     func applicationWillTerminate(_ application: UIApplication) {
         stopService()
     }
@@ -84,13 +84,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-    
+
     /// Starts Audio Service
     ///
     func startService () {
         self.audioMgr.startService()
     }
-    
+
     /// Stops Audio Service
     ///
     func stopService () {

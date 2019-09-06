@@ -100,7 +100,7 @@ class ViewController: UIViewController {
     @IBAction func volumeChanged(_ sender: AnyObject?) {
         setVolume(volumeSlider.value)
     }
-    
+
     @IBAction func refreshChannelsTapped(_ sender: UIBarButtonItem) {
         channelArray = []
         collectionView.reloadData()
@@ -112,7 +112,7 @@ class ViewController: UIViewController {
         runInBackground { [unowned self] in
             let result = AudioManager.shared.startDiscovery()
             print("[REDISCOVER]: resetDiscovery(): restarted = \(result)")
-            
+
             if !result {
                 DLog("Failed to restart discovery!")
             }
@@ -308,13 +308,13 @@ extension ViewController {
         collectionView.reloadData() // load UI channel grid first time
 
         if channelArray.count > startingChannel {
-            
+
             var channel = startingChannel
-            
+
             if (channelArray.count > currentChannelIndex) {
                 channel = currentChannelIndex
             }
-            
+
             labelCurrentName.text = channelArray[channel].name
             afterDelay(0.5) {
                 // make the selection of grid view item happen through UI methods
