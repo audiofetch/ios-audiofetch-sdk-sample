@@ -55,6 +55,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.startService()
         collectionView.backgroundColor = UIColor.clear
 
         labelCurrentName.font = APP_LABEL_FONT
@@ -100,13 +101,33 @@ class ViewController: UIViewController {
     @IBAction func volumeChanged(_ sender: AnyObject?) {
         setVolume(volumeSlider.value)
     }
+    
+    @IBAction func refreshChannelsTapped(_ sender: UIBarButtonItem) {
+        channelArray = []
+        collectionView.reloadData()
+        labelCurrentName.text = REFRESHING_CHANNELS
+        toolbarButton.isEnabled = false // pause for taps on play / pause long enough to allow time to get Audio session from iOS
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [unowned self] in
+            self.showDiscoveryHUD(REFRESHING_CHANNELS)
+        }
+        runInBackground { [unowned self] in
+            let result = AudioManager.shared.startDiscovery()
+            print("[REDISCOVER]: resetDiscovery(): restarted = \(result)")
+            
+            if !result {
+                DLog("Failed to restart discovery!")
+            }
+            DispatchQueue.main.async { [unowned self] in
+                self.toolbarButton.isEnabled = true // re-enable play / pause
+            }
+        }
+    }
 
 
     /// Called when play/pause is tapped
     ///
     /// - Parameter sender:
     @IBAction func playPauseTapped(_ sender: AnyObject?) {
-        toolbarButton.isEnabled = false
         if isPlaying {
             toolbarButton.image = UIImage(named: "ic_play")
             navigationController?.toolbar.backgroundColor = APP_COLOR_GREEN
@@ -122,13 +143,13 @@ class ViewController: UIViewController {
             }
             isPlaying = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            // prevent toggling too fast or SDK will fail to get audio session
-            self?.toolbarButton.isEnabled = true
-        }
     }
 
     // MARK: - Instance Methods
+    
+    func startService () {
+        audioMgr.startService()
+    }
 
     func showDiscoveryHUD(_ title: String = STR_FETCHING_AUDIO, _ hideAfter: TimeInterval = 5) {
         if !audioMgr.isAudioPlaying {
@@ -292,13 +313,20 @@ extension ViewController {
         collectionView.reloadData() // load UI channel grid first time
 
         if channelArray.count > startingChannel {
-            labelCurrentName.text = channelArray[startingChannel].name
+            
+            var channel = startingChannel
+            
+            if (channelArray.count > currentChannelIndex) {
+                channel = currentChannelIndex
+            }
+            
+            labelCurrentName.text = channelArray[channel].name
             afterDelay(0.5) {
                 // make the selection of grid view item happen through UI methods
-                self.setUIChannel(self.startingChannel)
+                self.setUIChannel(channel)
             }
             if isPlaying {
-                audioMgr.startAudio(on: UInt(startingChannel))
+                audioMgr.startAudio(on: UInt(channel))
                 updateNowPlaying()
             } else if audioMgr.isAudioServiceStarted {
                 // since were not in playing mode, but the audio service is started
