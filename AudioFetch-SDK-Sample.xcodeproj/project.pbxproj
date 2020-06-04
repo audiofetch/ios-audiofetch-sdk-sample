@@ -25,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		270892422489924B001C1648 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		2708924324899257001C1648 /* afetch_framework_extern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = afetch_framework_extern.h; sourceTree = "<group>"; };
 		2738E42A1D0F678100B684B4 /* AudioFetch-SDK-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AudioFetch-SDK-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2738E42D1D0F678100B684B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2738E42F1D0F678100B684B4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +141,8 @@
 				31229C8B1D8DD43E0065858F /* AudioManager.h */,
 				31229C8C1D8DD43E0065858F /* Channel.h */,
 				31229C8D1D8DD43E0065858F /* Notifications.h */,
+				2708924324899257001C1648 /* afetch_framework_extern.h */,
+				270892422489924B001C1648 /* Constants.h */,
 			);
 			path = AudioFetchSDK;
 			sourceTree = "<group>";
@@ -228,7 +232,7 @@
 				TargetAttributes = {
 					2738E4291D0F678100B684B4 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 822AX2PTCA;
+						DevelopmentTeam = T2JV8CBKG9;
 						LastSwiftMigration = 1020;
 					};
 				};
@@ -486,7 +490,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 822AX2PTCA;
+				DEVELOPMENT_TEAM = T2JV8CBKG9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "AudioFetch-SDK-Sample/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -519,7 +523,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 822AX2PTCA;
+				DEVELOPMENT_TEAM = T2JV8CBKG9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "AudioFetch-SDK-Sample/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

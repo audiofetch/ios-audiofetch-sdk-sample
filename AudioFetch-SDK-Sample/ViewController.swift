@@ -79,7 +79,7 @@ class ViewController: UIViewController {
         showDiscoveryHUD()
 
         afterDelay(1.2) {
-            self.setVolume(0.2)
+            self.setVolume(0.5)
         }
     }
 
@@ -221,6 +221,8 @@ class ViewController: UIViewController {
     /// - Parameter channel:
     func setChannel(_ channel: Channel) {
         let apbIdx = Int(channel.apbIndex)
+
+        DLog("apbchannel count: \(self.app.audioMgr.allApbs.count)")
         if self.app.audioMgr.allApbs.count > apbIdx {
             let switchToChannel = Int(self.app.audioMgr.allApbs[apbIdx].baseChannel) + Int(channel.channel)
             self.selectedChannel = channel

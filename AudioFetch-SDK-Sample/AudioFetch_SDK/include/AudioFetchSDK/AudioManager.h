@@ -23,6 +23,16 @@
  */
 @property (class, readonly) AudioManager* _Nonnull shared;
 
+/**
+Returns device Ip address
+*/
+@property(readonly, null_unspecified) NSString* deviceIpAddress;
+
+/**
+Returns device mac address
+*/
+@property(readonly, null_unspecified) NSString* deviceMacAddress;
+
 /*====================================
 // MARK: PUBLIC METHODS
 //===================================*/
@@ -111,15 +121,32 @@
  */
 - (void)audioCheckTimeout;
 
+- (void)sendStartReport;
+- (void)sendPingReport;
+- (void)sendAdsReport:(nonnull NSArray *) ads;
+- (void)sendAdClickedReport:(int) adId;
+- (void)deallocReporting;
+
 /*====================================
 // MARK: PUBLIC PROPERTIES
 //===================================*/
 
+@property(readwrite) BOOL autoStartAudio;
 
 /**
  Whether audio is playing, or not
  */
 @property (readonly) BOOL isAudioPlaying;
+
+/**
+Whether Other audio is playing, or not
+*/
+@property (readonly) BOOL isOtherAudioPlaying;
+
+/**
+Whether audio is interrupted, or not
+*/
+@property (readwrite, nonatomic) BOOL isAudioInterrupted;
 
 /**
  Indicates either discovery and/or audio service is started.
@@ -138,6 +165,11 @@
 @property(readwrite) BOOL holdAudioSession;
 
 /**
+Whether headphones are in use, or not
+*/
+@property(readonly) BOOL headphonesInUse;
+
+/**
  Whether the single APB is an express device
  */
 @property(readonly) BOOL isExpressDevice;
@@ -146,6 +178,9 @@
  What the volume level currently is set at (between 0 and 1)
  */
 @property(readwrite) float volume;
+
+@property(readonly, null_unspecified) float* floatBuffer;
+@property(readonly) UInt32 floatBufferSize;
 
 /**
  The currently selected channel
@@ -166,5 +201,10 @@
  Should be 75 for TV audio, 150 for music
  */
 @property(readwrite) NSInteger bufferLatencyMilliseconds;
+
+/**
+ This is the last ace buffer setting, that was assigned.
+ */
+@property(readonly) int lastAceBufferSetting;
 
 @end

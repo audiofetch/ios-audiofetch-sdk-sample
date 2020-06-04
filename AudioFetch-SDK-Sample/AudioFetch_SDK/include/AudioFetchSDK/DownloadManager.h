@@ -9,15 +9,15 @@
 
 
 @class DownloadManager;
-typedef void(^NetworkStatusChangedCompletionHandler)(DownloadManager* _Nonnull downloadManager);
+typedef void(^NetworkStatusChangedCompletionHandler)(DownloadManager * _Nonnull downloadManager);
 typedef void(^NetworkReachableCompletionHandler)(BOOL isReachable);
-typedef void(^DownloadManagerCompletionHandler)(id _Nullable json);
+typedef void(^DownloadManagerCompletionHandler)(_Nullable id json);
 
 @protocol DownloadManagerAuthenticationDelegate <NSObject>
 /**
  *  @return Returns an NSArray with a count of 2, with the first index being username, and second being password
  */
-- (NSArray* _Nonnull)provideCredentials;
+- (null_unspecified NSArray *)provideCredentials;
 @end
 
 @interface DownloadManager : NSObject {
@@ -26,17 +26,19 @@ typedef void(^DownloadManagerCompletionHandler)(id _Nullable json);
     NetworkReachableCompletionHandler netHandler;
 }
 
-@property (class, readonly) DownloadManager* _Nonnull shared;
-
 @property (nonatomic) BOOL isReachable;
 @property (nonatomic) BOOL isWifi;
-@property (weak) id <DownloadManagerAuthenticationDelegate> _Nullable delegate;
+@property (weak, null_unspecified) id <DownloadManagerAuthenticationDelegate> delegate;
 
-- (void)monitorNetworkStatus:(NetworkStatusChangedCompletionHandler _Nonnull) handler;
++ (nonnull instancetype)sharedInstance;
++ (void)setCachePolicy:(NSURLRequestCachePolicy) policy;
++ (void)resetCachePolicy;
+
+- (void)monitorNetworkStatus:(null_unspecified NetworkStatusChangedCompletionHandler) handler;
 - (void)stopMonitoringNetworkStatus;
-- (void)internetAvailableAtUrl:(NSString* _Nonnull) url WithHandler:(NetworkReachableCompletionHandler _Nonnull) handler;
-- (void)downloadJSON:(NSString* _Nonnull) url CompletionHandler:(DownloadManagerCompletionHandler _Nonnull) handler;
-- (void)postDownloadJSON:(NSString* _Nonnull) url
-              WithParams:(NSDictionary* _Nullable) parameters
-       CompletionHandler:(DownloadManagerCompletionHandler _Nonnull) handler;
+- (void)internetAvailableAtUrl:(nonnull NSString *) url WithHandler:(null_unspecified NetworkReachableCompletionHandler) handler;
+- (void)downloadJSON:(nonnull NSString *) url CompletionHandler:(null_unspecified DownloadManagerCompletionHandler) handler;
+- (void)postDownloadJSON:(nonnull NSString *) url
+              WithParams:(nullable NSDictionary *) parameters
+       CompletionHandler:(null_unspecified DownloadManagerCompletionHandler) handler;
 @end

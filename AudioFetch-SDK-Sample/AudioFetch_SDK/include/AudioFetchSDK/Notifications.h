@@ -6,47 +6,55 @@
 
 
 #import <UIKit/UIKit.h>
+#import "Constants.h"
 
-#ifdef __cplusplus
-#define FRAMEWORK_EXTERN      extern "C" __attribute__((visibility ("default")))
-#else
-#define FRAMEWORK_EXTERN      extern __attribute__((visibility ("default")))
-#endif
+// TODO: SDK rename all these to have the NOTIFY_ prefix and use uppercase
+// TODO: SDK possibly standardize on the same events that Android app uses so SDK's will jive
+// TODO: SDK consider using similar events for notificatons bubbled up to swift so that a common class object can be shared rather than random undefined objects
+// TODO: SDK define these said event classes, as already defined by the java implementation
 
-// NOTIFICATIONS
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const reloadNSUserDefaultsNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const apbDiscoveredNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const lowAudioNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const reloadNSUserDefaultsNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const apbDiscoveredNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const lowAudioNotification;
 
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const networkConnectionNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const demoModeToggledNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const diagnosticModeToggledNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const deviceDiscoveryFinishedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const audioBufferUpdateNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const emailSentNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const deviceDiscoveryFailedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const hardwareButtonVolumeNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const activeSerialNumberChangedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const volumeChangedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const playPressedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const pausePressedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const stopPressedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const forwardPressedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const backwardPressedNotification;
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const otherPressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const networkConnectionNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const demoModeToggledNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const diagnosticModeToggledNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const deviceDiscoveryFinishedNotification;
 
-FRAMEWORK_EXTERN NSNotificationName _Nonnull const channelsLoadedNotification;
-FRAMEWORK_EXTERN NSString*  _Nonnull const channelsLoadedNotificationChannelsKey;
-FRAMEWORK_EXTERN NSString*  _Nonnull const channelsLoadedNotificationAudioModeKey;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const audioBufferUpdateNotification;
+
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const emailSentNotification;
+
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const deviceDiscoveryFailedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const channelsLoadedNotification;
+AFETCH_FRAMEWORK_EXTERN NSString *const channelsLoadedNotificationChannelsKey;
+AFETCH_FRAMEWORK_EXTERN NSString *const channelsLoadedNotificationAudioModeKey;
 
 
 
-// FONTS
-FRAMEWORK_EXTERN NSString*  _Nonnull const K_APP_FONT_NAME;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const hardwareButtonVolumeNotification;
 
-// COLORS
-FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLACK;
-FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLUE;
-FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_ORANGE;
-FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_SILVER;
-FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_GREEN;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const activeSerialNumberChangedNotification;
+
+
+// TODO: REMOVE THESE AND RESTORE AS MACROS AND MAKE INTERNAL
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const volumeChangedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const playPressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const pausePressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const stopPressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const forwardPressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const backwardPressedNotification;
+AFETCH_FRAMEWORK_EXTERN NSNotificationName const otherPressedNotification;
+
+
+
+
+
+AFETCH_FRAMEWORK_EXTERN NSString *const K_APP_FONT_NAME;
+
+AFETCH_FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLACK;
+AFETCH_FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_BLUE;
+AFETCH_FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_ORANGE;
+AFETCH_FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_SILVER;
+AFETCH_FRAMEWORK_EXTERN NSInteger const K_APP_COLOR_GREEN;
