@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:ios-audiofetch-sdk-retry/AFSdkSample/AFSdkSample.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:AudioFetch-SDK-Sample.xcodeproj">
    </FileRef>
    <FileRef
